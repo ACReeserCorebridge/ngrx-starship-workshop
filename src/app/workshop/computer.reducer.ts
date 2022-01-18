@@ -5,6 +5,7 @@
  */
 import { createReducer, on } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
+import { ComputerActions } from "./action-types";
 import { echo, loadNavDataSuccess } from "./computer.actions";
 
 /**
@@ -26,11 +27,13 @@ export interface ComputerState{
      */
     echoMessages: string[]
     //TODO: add a lot more state!
+    navs: NavigationData[]
 }
 
 export const InitialComputerState: ComputerState = {
-    echoMessages: []
+    echoMessages: [],
     //TODO: add additional initial state!
+    navs: []
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -44,6 +47,12 @@ export const computerReducer = createReducer<ComputerState>(
             ]
         };
     }),
+    on(ComputerActions.loadNavDataSuccess, (state, action) => {
+        return {
+            ...state,
+            navs: action.navs
+        }
+    })
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
     //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
     //TODO: add a lot more reducer action logic!
