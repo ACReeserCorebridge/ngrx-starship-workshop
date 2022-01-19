@@ -1,6 +1,6 @@
 /**
  * computer reducer file!
- * 
+ *
  * all main computer logic should go in this file
  */
 import { createReducer, on } from "@ngrx/store";
@@ -10,6 +10,7 @@ import { ComputerActions } from "./action-types";
 import { echo, loadNavDataSuccess } from "./computer.actions";
 import { EngineService } from "./services/engine-service";
 import { ShieldService } from "./services/shield-service";
+import { LaserService } from "./services/laser-service";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -95,6 +96,12 @@ export const computerReducer = createReducer<ComputerState>(
       return {
         ...state,
         shield: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield)
+      }
+    }),
+    on(ComputerActions.changeLaser, (state, action) => {
+      return {
+        ...state,
+        laser: LaserService.ChangeLaserBasedOnDirective(action.directive, state.laser)
       }
     })
 

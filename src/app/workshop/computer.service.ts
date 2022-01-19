@@ -8,7 +8,7 @@ import { DirectObjectTypes } from "./direct-object-types";
 
 /**
  * computer service to interface between captain's commands and ngrx store
- * 
+ *
  * this service is fully customizable, but all logic should be in the actions/reducers
  */
 @Injectable({
@@ -44,6 +44,10 @@ export class ComputerService {
 
           if(directive.directObject == DirectObjectTypes.Shields) {
             this.store.dispatch(ComputerActions.changeShields({ directive }))
+          }
+
+          if(directive.directObject == DirectObjectTypes.Laser) {
+            this.store.dispatch(ComputerActions.changeLaser({ directive }))
           }
         });
     }

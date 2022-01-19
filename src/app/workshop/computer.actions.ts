@@ -1,6 +1,6 @@
 /**
  * computer action file!
- * 
+ *
  * all action definitions go in this file
  */
 import { createAction, props } from "@ngrx/store";
@@ -27,3 +27,5 @@ export const switchDockingClamp = createAction('[computer] Switch Docking Clamp'
 export const changeEngine = createAction('[computer] Change Engine', props<{ directive: IComputerDirective }>());
 
 export const changeShields = createAction('[computer]Set Shield Level', props<{ directive: IComputerDirective }>());
+
+export const changeLaser = createAction('[computer] Change Laser', props<{ directive: IComputerDirective}>());

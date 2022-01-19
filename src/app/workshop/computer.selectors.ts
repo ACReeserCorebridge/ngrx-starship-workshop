@@ -51,8 +51,7 @@ export const selectShield = createSelector(
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.laser;
     }
 );
 

@@ -16,12 +16,9 @@ export class LasersWidgetComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  
+
   percent$ = this.store.select(selectLasers).pipe(
-    //DO NOT change the tap and share operators below
-    tap((laserPowerAmount: number) => {
-      this.snitch.OnVisualChange({laser: laserPowerAmount})
-    }),
+    tap((laserPowerAmount: number) => { this.snitch.OnVisualChange({laser: laserPowerAmount})}),
     share()
   );
   percentClass$ = this.percent$.pipe(
