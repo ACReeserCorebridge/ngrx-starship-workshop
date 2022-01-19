@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
-import { IComputerDirective } from "../challenge.service";
+import { IComputerDirective, DirectObject } from "../challenge.service";
+import { ComputerActions } from "./action-types";
 import { echo, loadNavData } from "./computer.actions";
+import { DirectObjectTypes } from "./direct-object-types";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -12,28 +14,34 @@ import { echo, loadNavData } from "./computer.actions";
 @Injectable({
     providedIn: 'root'
 })
-export class ComputerService{
-    constructor(private store: Store<AppState>){}
+export class ComputerService {
+    constructor(private store: Store<AppState>) { }
 
     /**
      * this is called on the captain's very first voice event
      */
-    public Initialize(){
+    public Initialize() {
         this.store.dispatch(loadNavData());
     }
     /**
      * this is called when the captain commands the computer to do one or more things
      */
-    public InterpretDirectives(directives: IComputerDirective[]){
+    public InterpretDirectives(directives: IComputerDirective[]) {
         //TODO: decide which actions to dispatch based on the directives passed in!
-        directives.forEach(x => this.store.dispatch(
-            //TODO: you don't have to echo all the directives, do what you want!
-            echo(
-                {
-                    message: this.directiveToMessage(x)
-                }
-            )
-        ));
+        directives.forEach(directive => {
+            this.store.dispatch(
+                //TODO: you don't have to echo all the directives, do what you want!
+                ComputerActions.echo({ message: this.directiveToMessage(directive) }),
+            );
+
+            if (directive.directObject == DirectObjectTypes.DockingClamp) {
+                this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" ? true : false }))
+            }
+
+            if (directive.directObject == DirectObjectTypes.Engines) {
+                this.store.dispatch(ComputerActions.changeEngine({ directive }))
+            }
+        });
     }
 
     /**
@@ -43,7 +51,7 @@ export class ComputerService{
      * @param d 
      * @returns 
      */
-    private directiveToMessage(d: IComputerDirective): string{
+    private directiveToMessage(d: IComputerDirective): string {
         let result = "ACK > ";
         if (d.adverb)
             result += d.adverb.toUpperCase() + " ";

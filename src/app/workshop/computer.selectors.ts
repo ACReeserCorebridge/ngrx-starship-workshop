@@ -8,6 +8,7 @@
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
 import { SolarSystemLocation } from "../challenge.service";
+import { NavigationData } from "../nav-db.service";
 import { ComputerState } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
@@ -36,8 +37,7 @@ export const selectViewscreen = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.visualState.engine
     }
 );
 
@@ -52,8 +52,7 @@ export const selectLasers = createSelector(
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.random() > 0.5
+        return state.visualState.docking
     }
 );
 

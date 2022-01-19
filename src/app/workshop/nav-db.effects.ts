@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { switchMap, map, catchError, of, concatMap } from "rxjs";
+import { switchMap, map, catchError, of, concatMap, tap } from "rxjs";
 import { NavDBService, NavigationData } from "../nav-db.service";
 import { ComputerActions } from "./action-types";
 
@@ -23,4 +23,12 @@ export class NavDBEffects {
         ))
     )
   );
+
+  handleLoadNavDataError$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ComputerActions.loadNavDataError),
+      tap(action => { console.log("Error when fetching Navigation Data") })
+    ),
+    { dispatch: false }
+  )
 }
