@@ -86,6 +86,12 @@ export const computerReducer = createReducer<ComputerState>(
             docking: action.enable
         }
     }),
+    on(ComputerActions.switchTractorBeam, (state, action) => {
+        return {
+            ...state,
+            tractorbeam: action.enable
+        }
+    }),
     on(ComputerActions.changeEngine, (state, action) => {
         return {
             ...state,

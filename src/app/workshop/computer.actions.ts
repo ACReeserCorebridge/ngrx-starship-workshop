@@ -24,6 +24,8 @@ export const loadNavDataError = createAction('[computer] Load Navigation Data Er
 // https://ngrx.io/guide/store/actions
 export const switchDockingClamp = createAction('[computer] Switch Docking Clamp', props<{ enable: boolean }>());
 
+export const switchTractorBeam = createAction('[computer] Switch Tractor Beam', props<{ enable: boolean }>());
+
 export const changeEngine = createAction('[computer] Change Engine', props<{ directive: IComputerDirective }>());
 
 export const changeShields = createAction('[computer]Set Shield Level', props<{ directive: IComputerDirective }>());

@@ -35,7 +35,11 @@ export class ComputerService {
             );
 
             if (directive.directObject == DirectObjectTypes.DockingClamp) {
-                this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" ? true : false }))
+                this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" }))
+            }
+
+            if (directive.directObject == DirectObjectTypes.TractorBeam) {
+                this.store.dispatch(ComputerActions.switchTractorBeam({ enable: directive.verb == "engage" }))
             }
 
             if (directive.directObject == DirectObjectTypes.Engines) {

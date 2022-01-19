@@ -62,14 +62,9 @@ export const selectDockingClamp = createSelector(
     }
 );
 
-//TODO: finish up the shield selector!
-// export const selectShields = createSelector(
-//     ??,
-//     (??) => ??
-// );
-
-//TODO: finish up the tractorbeam selector!
-// export const selectTractorbeam = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectTractorBeam = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+      return state.tractorbeam
+    }
+);
