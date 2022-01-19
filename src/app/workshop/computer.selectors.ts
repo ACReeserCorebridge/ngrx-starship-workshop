@@ -1,8 +1,8 @@
 /**
  * computer selector file!
- * 
+ *
  * all main computer selectors go in this file
- * 
+ *
  * this file should be free of any business logic or Math.random() calls!
  */
 import { createSelector } from "@ngrx/store";
@@ -40,6 +40,13 @@ export const selectEngine = createSelector(
         return state.engine
     }
 );
+
+export const selectShield = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.shield;
+  }
+)
 
 export const selectLasers = createSelector(
     selectComputer,

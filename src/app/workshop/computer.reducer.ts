@@ -9,22 +9,23 @@ import { NavigationData } from "../nav-db.service";
 import { ComputerActions } from "./action-types";
 import { echo, loadNavDataSuccess } from "./computer.actions";
 import { EngineService } from "./services/engine-service";
+import { ShieldService } from "./services/shield-service";
 
 /**
  * This is the "slice" that you need to fill out!
- * 
- * Course data, location data, engine/shield/laser power level, all 
+ *
+ * Course data, location data, engine/shield/laser power level, all
  * of these state properties must reside in this interface!
- * 
+ *
  * All of the visual components will select their state from this central
  * state location.
  */
 export interface ComputerState {
     /**
      * these messages are displayed by the computer-messages component
-     * 
+     *
      * they are not required or useful, they are just example of state properties
-     * 
+     *
      * feel free to change or remove this
      */
     echoMessages: string[],
@@ -89,7 +90,13 @@ export const computerReducer = createReducer<ComputerState>(
             ...state,
             engine: EngineService.ChangeEngineBasedOnDirective(action.directive, state.engine)
         }
-    })
+    }),
+  on(ComputerActions.changeShields, (state, action) => {
+    return {
+      ...state,
+      engine: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield)
+    }
+  })
 
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
     //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!

@@ -22,6 +22,8 @@ export const loadNavDataError = createAction('[computer] Load Navigation Data Er
 
 //TODO: add a lot more action definitions!
 // https://ngrx.io/guide/store/actions
-export const switchDockingClamp = createAction('[computer] Switch Docking Clamp', props<{ enable: boolean }>())
+export const switchDockingClamp = createAction('[computer] Switch Docking Clamp', props<{ enable: boolean }>());
 
-export const changeEngine = createAction('[computer] Change Engine', props<{ directive: IComputerDirective }>())
+export const changeEngine = createAction('[computer] Change Engine', props<{ directive: IComputerDirective }>());
+
+export const changeShields = createAction('[computer]Set Shield Level', props<{ directive: IComputerDirective }>());

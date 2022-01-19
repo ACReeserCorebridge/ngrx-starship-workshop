@@ -29,27 +29,31 @@ export class ComputerService {
     public InterpretDirectives(directives: IComputerDirective[]) {
         //TODO: decide which actions to dispatch based on the directives passed in!
         directives.forEach(directive => {
-            this.store.dispatch(
-                //TODO: you don't have to echo all the directives, do what you want!
-                ComputerActions.echo({ message: this.directiveToMessage(directive) }),
-            );
+          this.store.dispatch(
+              //TODO: you don't have to echo all the directives, do what you want!
+              ComputerActions.echo({ message: this.directiveToMessage(directive) }),
+          );
 
-            if (directive.directObject == DirectObjectTypes.DockingClamp) {
-                this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" ? true : false }))
-            }
+          if (directive.directObject == DirectObjectTypes.DockingClamp) {
+              this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" ? true : false }))
+          }
 
-            if (directive.directObject == DirectObjectTypes.Engines) {
-                this.store.dispatch(ComputerActions.changeEngine({ directive }))
-            }
+          if (directive.directObject == DirectObjectTypes.Engines) {
+              this.store.dispatch(ComputerActions.changeEngine({ directive }))
+          }
+
+          if(directive.directObject == DirectObjectTypes.Shields) {
+            this.store.dispatch(ComputerActions.changeShields({ directive }))
+          }
         });
     }
 
     /**
      * this is a helper method to turn a computer directive into a short string
-     * 
+     *
      * you can change this!
-     * @param d 
-     * @returns 
+     * @param d
+     * @returns
      */
     private directiveToMessage(d: IComputerDirective): string {
         let result = "ACK > ";
@@ -62,4 +66,4 @@ export class ComputerService {
             result += " " + d.adjectivalPhrase.toUpperCase();
         return result;
     }
-} 
+}
