@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { IComputerDirective } from "../challenge.service";
-import { echo, loadNavData } from "./computer.actions";
+import { echo, loadNavData, plotCourse, setObjectLevel, setIsObjectActive } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -25,15 +25,49 @@ export class ComputerService{
      * this is called when the captain commands the computer to do one or more things
      */
     public InterpretDirectives(directives: IComputerDirective[]){
-        //TODO: decide which actions to dispatch based on the directives passed in!
-        directives.forEach(x => this.store.dispatch(
+        directives.forEach(x => {
+            let engage:boolean = false;
+            let change:number = 0;
+            if (x.verb === 'engage') {
+                engage = true;
+                if (x.adverb) {
+                    switch (x.adverb) {
+                        case 'fully':
+                            change = 10;
+                            break;
+                        case 'halfway':
+                            change = 5;
+                            break;
+                        case 'slowly':
+                            change = 1
+                            break;
+                    }
+                }
+            }
+            switch (x.directObject) {
+                case 'shields':
+                case 'engines':
+                case 'laser':
+                    this.store.dispatch(setObjectLevel({ object: x.directObject, level: change }))
+                    break;
+                case 'docking clamp':
+                case 'tractorbeam':
+                    this.store.dispatch(setIsObjectActive({ object: x.directObject, active: engage }))
+                    break;
+                case 'course':
+                    if (x.adjectivalPhrase) {
+                        this.store.dispatch(plotCourse({ course:  x.adjectivalPhrase }))
+                    }
+                    break;
+            }
+            this.store.dispatch(
             //TODO: you don't have to echo all the directives, do what you want!
             echo(
                 {
                     message: this.directiveToMessage(x)
                 }
-            )
-        ));
+            ))
+        });
     }
 
     /**

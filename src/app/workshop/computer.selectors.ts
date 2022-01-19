@@ -7,8 +7,7 @@
  */
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
-import { SolarSystemLocation } from "../challenge.service";
-import { ComputerState } from "./computer.reducer";
+import { ActivateableObjects, ComputerState } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
 // https://ngrx.io/guide/store/selectors
@@ -16,18 +15,14 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        const locations: SolarSystemLocation[] = ['LEO', 'LunaOrbit', 'AsteroidBelt'];
-        const planets = ['/assets/mars.png', '/assets/SunRed.png', undefined];
-        const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined];
         const view: ViewscreenState = {
-            location: locations[Math.floor(Math.random() * 3)],
-            course: locations[Math.floor(Math.random() * 4)],
-            leftImage: satellites[Math.floor(Math.random() * 3)],
-            centerImage: planets[Math.floor(Math.random() * 3)],
-            rightImage: satellites[Math.floor(Math.random() * 3)],
-            laser: Math.random() > 0.5,
-            tractor: Math.random() > 0.5,
+            location: state.location,
+            course: state.course,
+            leftImage: state.navData?.find(x => x.location===state.location)?.leftImage,            
+            centerImage: state.navData?.find(x => x.location===state.location)?.centerImage,            
+            rightImage: state.navData?.find(x => x.location===state.location)?.rightImage,
+            laser: state.laserPower > 0,
+            tractor: state.activateableObject == ActivateableObjects.TractorBeamActive,
         };
         return view;
     }
@@ -36,35 +31,34 @@ export const selectViewscreen = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.enginePower;
     }
 );
 
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.laserPower;
     }
 );
 
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.random() > 0.5
+        return state.activateableObject == ActivateableObjects.DockingClampActive;
     }
 );
 
-//TODO: finish up the shield selector!
-// export const selectShields = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectShields = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        return state.shieldPower;
+    }
+);
 
-//TODO: finish up the tractorbeam selector!
-// export const selectTractorbeam = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectTractorbeam = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        return state.activateableObject == ActivateableObjects.TractorBeamActive;
+    }
+);
