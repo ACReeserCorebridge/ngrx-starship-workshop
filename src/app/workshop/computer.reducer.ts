@@ -93,16 +93,16 @@ export const computerReducer = createReducer<ComputerState>(
         }
     }),
     on(ComputerActions.changeShields, (state, action) => {
-      return {
-        ...state,
-        shield: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield)
-      }
+        return {
+          ...state,
+          shield: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield)
+        }
     }),
     on(ComputerActions.changeLaser, (state, action) => {
-      return {
-        ...state,
-        laser: LaserService.ChangeLaserBasedOnDirective(action.directive, state.laser)
-      }
+        return {
+          ...state,
+          laser: LaserService.ChangeLaserBasedOnDirective(action.directive, state.laser)
+        }
     })
 
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!

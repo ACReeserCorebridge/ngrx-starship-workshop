@@ -42,10 +42,10 @@ export const selectEngine = createSelector(
 );
 
 export const selectShield = createSelector(
-  selectComputer,
-  (state: ComputerState) => {
-    return state.shield;
-  }
+    selectComputer,
+    (state: ComputerState) => {
+      return state.shield;
+    }
 )
 
 export const selectLasers = createSelector(

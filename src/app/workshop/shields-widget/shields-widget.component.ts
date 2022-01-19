@@ -11,26 +11,26 @@ import { selectShield } from "../computer.selectors";
 // import { selectShields } from '../computer.selectors';
 
 @Component({
-  selector: 'app-shields-widget',
-  templateUrl: './shields-widget.component.html',
-  styleUrls: ['./shields-widget.component.scss']
+    selector: 'app-shields-widget',
+    templateUrl: './shields-widget.component.html',
+    styleUrls: ['./shields-widget.component.scss']
 })
 export class ShieldsWidgetComponent implements OnInit {
 
-  constructor(private store: Store<AppState>, private snitch: SnitchService) { }
+    constructor(private store: Store<AppState>, private snitch: SnitchService) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
-  percent$ = this.store.select(selectShield).pipe(
-    tap((shieldPowerAmount: number) => this.snitch.OnVisualChange({shield: shieldPowerAmount})),
-    share()
-  );
-  percentClass$ = this.percent$.pipe(
-    map(y => "percent-"+y)
-  );
-  percentStr$ = this.percent$.pipe(
-    map(z => (z*10)+'%')
-  );
+    percent$ = this.store.select(selectShield).pipe(
+        tap((shieldPowerAmount: number) => this.snitch.OnVisualChange({shield: shieldPowerAmount})),
+        share()
+    );
+    percentClass$ = this.percent$.pipe(
+        map(y => "percent-"+y)
+    );
+    percentStr$ = this.percent$.pipe(
+        map(z => (z*10)+'%')
+    );
 
 }
