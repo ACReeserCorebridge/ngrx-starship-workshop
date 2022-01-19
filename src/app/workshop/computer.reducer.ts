@@ -91,12 +91,12 @@ export const computerReducer = createReducer<ComputerState>(
             engine: EngineService.ChangeEngineBasedOnDirective(action.directive, state.engine)
         }
     }),
-  on(ComputerActions.changeShields, (state, action) => {
-    return {
-      ...state,
-      engine: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield)
-    }
-  })
+    on(ComputerActions.changeShields, (state, action) => {
+      return {
+        ...state,
+        shield: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield)
+      }
+    })
 
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
     //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
