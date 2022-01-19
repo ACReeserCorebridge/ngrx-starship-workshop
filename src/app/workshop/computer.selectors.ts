@@ -37,7 +37,7 @@ export const selectViewscreen = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.visualState.engine
+        return state.engine
     }
 );
 
@@ -52,7 +52,7 @@ export const selectLasers = createSelector(
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.visualState.docking
+        return state.docking
     }
 );
 

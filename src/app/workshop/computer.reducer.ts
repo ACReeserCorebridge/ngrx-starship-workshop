@@ -30,26 +30,35 @@ export interface ComputerState {
     echoMessages: string[],
     //TODO: add a lot more state!
     navs: NavigationData[],
-    visualState: Required<IExpectations>
+    //I don't know if we need all those properties, so we can remove the ones not used by any selector
+    docking: boolean,
+    engine: number,
+    laser: number,
+    location: string,
+    course: string,
+    shield: number,
+    tractorbeam: boolean,
+    satelliteView: boolean,
+    asteroidView: boolean,
+    laserView: boolean,
+    tractorView: boolean,
 }
 
 export const InitialComputerState: ComputerState = {
     echoMessages: [],
     //TODO: add additional initial state!
     navs: [],
-    visualState: {
-        docking: true,
-        engine: 0,
-        laser: 0,
-        location: 'LEO',
-        course: 'LEO',
-        shield: 0,
-        tractorbeam: false,
-        satelliteView: false,
-        asteroidView: false,
-        laserView: false,
-        tractorView: false,
-    }
+    docking: true,
+    engine: 0,
+    laser: 0,
+    location: 'LEO',
+    course: 'LEO',
+    shield: 0,
+    tractorbeam: false,
+    satelliteView: false,
+    asteroidView: false,
+    laserView: false,
+    tractorView: false,
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -72,19 +81,13 @@ export const computerReducer = createReducer<ComputerState>(
     on(ComputerActions.switchDockingClamp, (state, action) => {
         return {
             ...state,
-            visualState: {
-                ...state.visualState,
-                docking: action.enable
-            }
+            docking: action.enable
         }
     }),
     on(ComputerActions.changeEngine, (state, action) => {
         return {
             ...state,
-            visualState: {
-                ...state.visualState,
-                engine: EngineService.ChangeEngineBasedOnDirective(action.directive, state.visualState.engine)
-            }
+            engine: EngineService.ChangeEngineBasedOnDirective(action.directive, state.engine)
         }
     })
 
