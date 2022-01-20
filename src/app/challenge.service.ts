@@ -1,7 +1,7 @@
 /**
  * DO NOT modify this file!
- * 
- * This file 
+ *
+ * This file
  * 1. specifies the challenge code
  * 2. issues directives to the computer service
  * 3. listens for VISUAL changes to state
@@ -28,19 +28,19 @@ export interface IComputerDirective {
 export interface IExpectations {
     /**
      * the amount of power to the shield.
-     * 
+     *
      * Must be from 0-10
      */
     shield?:number,
     /**
      * the amount of power to the engine.
-     * 
+     *
      * Must be from 0-10
      */
     engine?:number,
     /**
      * the amount of power to the laser.
-     * 
+     *
      * Must be from 0-10
      */
     laser?:number,
@@ -60,7 +60,7 @@ export interface IVoiceEvent{
     mood?: 'angry'
 }
 
-const TickRateMS = 3000;
+const TickRateMS = 500;
 
 @Injectable({
     providedIn: 'root'
@@ -68,7 +68,7 @@ const TickRateMS = 3000;
 export class ChallengeService{
     /**
      * DO NOT modify this array! This is the test!
-     * 
+     *
      * you SHOULD use it for reference!
      */
     private commands: IVoiceEvent[] = [
