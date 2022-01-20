@@ -274,7 +274,7 @@ export class ChallengeService{
         },
         {
             expectation: {
-                location: 'LEO'
+                location: 'LEO' // NOTES: either this is broken or somewhere course must be location
             },
             transcription: "At this speed, I'll be in time for tea...",
         },

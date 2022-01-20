@@ -68,8 +68,7 @@ export const computerReducer = createReducer<ComputerState>(
             ]
         };
     }),
-    //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
-    //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
+
     on(loadNavDataSuccess, (state, action) => {
       let res = {
         ...state,
@@ -84,11 +83,12 @@ export const computerReducer = createReducer<ComputerState>(
         shield: action.power
       };
 
-      if (action.power == 10) {
+      if (action.power == 10) { // NOTES: power=shields+laser+engine <= 10
         res.laserView = false;
         res.laser = 0;
         res.engine = 0;
       }
+      // TODO: if total power is greater than 10, remove power from the other 2
 
       return res;
     }),
@@ -110,7 +110,7 @@ export const computerReducer = createReducer<ComputerState>(
         res.laser = 0;
         res.shield = 0;
       }
-      if (action.power >= 5) {
+      if (action.power >= 5) { // NOTES: this is to solve plotting course takes you to location without disengaging engines, no idea when course becomes location along the way.
         res.location = state.course;
       }
       return res;
@@ -132,7 +132,7 @@ export const computerReducer = createReducer<ComputerState>(
         asteroidView: false,
         navs: state.navs.map(nav => ({...nav})) // 2
                         .map(nav => { // 3
-                            if (nav.location == "AsteroidBelt") {
+                            if (nav.location == "AsteroidBelt") { // NOTES: destroy asteroid
                               return {
                                 ...nav,
                                 centerImage: '',
@@ -142,6 +142,7 @@ export const computerReducer = createReducer<ComputerState>(
                             }
                         })
       };
+
       if (action.power == 10) {
         res.engine = 0;
         res.shield = 0;
@@ -187,7 +188,7 @@ export const computerReducer = createReducer<ComputerState>(
         satelliteView: false,
         navs: state.navs.map(nav => ({...nav})) // 2
                         .map(nav => { // 3
-                            if (nav.location == "LunaOrbit") {
+                            if (nav.location == "LunaOrbit") { // NOTES: take satellite
                               return {
                                 ...nav,
                                 leftImage: '',
@@ -212,9 +213,6 @@ export const computerReducer = createReducer<ComputerState>(
           break;
         case "AsteroidBelt":
           res.asteroidView = true;
-          break;
-        case "LEO":
-          // res.satelliteView = true;
           break;
       }
       return res;
