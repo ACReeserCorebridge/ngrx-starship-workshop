@@ -13,28 +13,6 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
 // https://ngrx.io/guide/store/selectors
 
-export const selectViewscreen = createSelector(
-    selectComputer,
-    selectCurrentNavLocationData,
-    selectLaserView,
-    selectTractorView,
-    selectSatelliteView,
-    selectAsteroidView,
-    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean, satelliteView: boolean, asteroidView: boolean) => {
-        const view: ViewscreenState = {
-            location: state.location,
-            course: state.course,
-            leftImage: currentNavLocation?.leftImage,
-            centerImage: currentNavLocation?.centerImage,
-            rightImage: currentNavLocation?.rightImage,
-            laser: laserView,
-            tractor: tractorView,
-            satellite: satelliteView,
-            asteroid: asteroidView
-        };
-        return view;
-    }
-);
 
 export const selectCurrentNavLocationData = createSelector(
   selectComputer,
@@ -72,38 +50,38 @@ export const selectAsteroidView = createSelector(
 );
 
 export const selectEngine = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-        return state.engine
-    }
+  selectComputer,
+  (state: ComputerState) => {
+    return state.engine
+  }
 );
 
 export const selectShield = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-      return state.shield;
-    }
+  selectComputer,
+  (state: ComputerState) => {
+    return state.shield;
+  }
 )
 
 export const selectLasers = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-        return state.laser;
-    }
+  selectComputer,
+  (state: ComputerState) => {
+    return state.laser;
+  }
 );
 
 export const selectDockingClamp = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-        return state.docking
-    }
+  selectComputer,
+  (state: ComputerState) => {
+    return state.docking
+  }
 );
 
 export const selectTractorBeam = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-      return state.tractorbeam
-    }
+  selectComputer,
+  (state: ComputerState) => {
+    return state.tractorbeam
+  }
 );
 
 export const selectCourse = createSelector(
@@ -111,4 +89,27 @@ export const selectCourse = createSelector(
   (state: ComputerState) => {
     return state.course
   }
+);
+
+export const selectViewscreen = createSelector(
+    selectComputer,
+    selectCurrentNavLocationData,
+    selectLaserView,
+    selectTractorView,
+    selectSatelliteView,
+    selectAsteroidView,
+    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean, satelliteView: boolean, asteroidView: boolean) => {
+        const view: ViewscreenState = {
+            location: state.location,
+            course: state.course,
+            leftImage: currentNavLocation?.leftImage,
+            centerImage: currentNavLocation?.centerImage,
+            rightImage: currentNavLocation?.rightImage,
+            laser: laserView,
+            tractor: tractorView,
+            satellite: satelliteView,
+            asteroid: asteroidView
+        };
+        return view;
+    }
 );
