@@ -43,8 +43,7 @@ export interface ComputerState {
     shield: number,
     tractorbeam: boolean,
     satelliteView: boolean,
-    asteroidView: boolean,
-    tractorView: boolean
+    asteroidView: boolean
 }
 
 export const InitialComputerState: ComputerState = {
@@ -59,8 +58,7 @@ export const InitialComputerState: ComputerState = {
     shield: 0,
     tractorbeam: false,
     satelliteView: false,
-    asteroidView: false,
-    tractorView: false
+    asteroidView: false
 }
 
 export const computerReducer = createReducer<ComputerState>(

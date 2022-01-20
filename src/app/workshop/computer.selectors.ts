@@ -27,11 +27,19 @@ export const selectLaserView = createSelector(
     }
 );
 
+export const selectTractorView = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        return state.tractorbeam;
+    }
+);
+
 export const selectViewscreen = createSelector(
     selectComputer,
     selectCurrentNavLocationData,
     selectLaserView,
-    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean) => {
+    selectTractorView,
+    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean) => {
         //TODO: remove all the random state!
         const view: ViewscreenState = {
             location: state.location,
@@ -40,7 +48,7 @@ export const selectViewscreen = createSelector(
             centerImage: currentNavLocation?.centerImage,
             rightImage: currentNavLocation?.rightImage,
             laser: laserView,
-            tractor: Math.random() > 0.5,
+            tractor: tractorView
         };
         return view;
     }
