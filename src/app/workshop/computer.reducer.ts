@@ -88,7 +88,8 @@ export const computerReducer = createReducer<ComputerState>(
     on(ComputerActions.switchTractorBeam, (state, action) => {
         return {
             ...state,
-            tractorbeam: action.enable
+            tractorbeam: action.enable,
+            satelliteView: action.enable
         }
     }),
     on(ComputerActions.changeEngine, (state, action) => {
@@ -106,15 +107,20 @@ export const computerReducer = createReducer<ComputerState>(
         }
     }),
     on(ComputerActions.changeLaser, (state, action) => {
+      let newLaserState = LaserService.ChangeLaserBasedOnDirective(action.directive, state.laser);
         return {
           ...state,
-          laser: LaserService.ChangeLaserBasedOnDirective(action.directive, state.laser)
+          laser: newLaserState,
+          asteroidView: newLaserState == 0
         }
     }),
     on(ComputerActions.changeCourse, (state, action) => {
+          let newCourse = CourseService.ChangeCourseBasedOnDirective(action.directive, state.course);
           return {
               ...state,
-              course: CourseService.ChangeCourseBasedOnDirective(action.directive, state.course) 
+              course: newCourse,
+              satelliteView: newCourse == "LunaOrbit",
+              asteroidView: newCourse == "AsteroidBelt"
           }
     })
 );

@@ -34,12 +34,28 @@ export const selectTractorView = createSelector(
     }
 );
 
+export const selectSatelliteView = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.satelliteView;
+  }
+);
+
+export const selectAsteroidView = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.asteroidView;
+  }
+);
+
 export const selectViewscreen = createSelector(
     selectComputer,
     selectCurrentNavLocationData,
     selectLaserView,
     selectTractorView,
-    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean) => {
+    selectSatelliteView,
+    selectAsteroidView,
+    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean, satelliteView: boolean, asteroidView: boolean) => {
         const view: ViewscreenState = {
             location: state.location,
             course: state.course,
@@ -47,7 +63,9 @@ export const selectViewscreen = createSelector(
             centerImage: currentNavLocation?.centerImage,
             rightImage: currentNavLocation?.rightImage,
             laser: laserView,
-            tractor: tractorView
+            tractor: tractorView,
+            satellite: satelliteView,
+            asteroid: asteroidView
         };
         return view;
     }

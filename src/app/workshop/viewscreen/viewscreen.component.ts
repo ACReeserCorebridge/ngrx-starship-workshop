@@ -12,7 +12,7 @@ import { selectViewscreen } from '../computer.selectors';
 
 /**
  * the initial view state that the viewscreen component needs
- * 
+ *
  * you may ADD to the interface but may not REMOVE from it
  */
 export interface ViewscreenState {
@@ -23,6 +23,8 @@ export interface ViewscreenState {
   rightImage: string|undefined,
   laser: boolean,
   tractor: boolean,
+  satellite: boolean,
+  asteroid: boolean
 }
 
 @Component({
@@ -42,8 +44,8 @@ export class ViewscreenComponent {
         course: env.course,
         tractorView: env.tractor,
         laserView: env.laser,
-        satelliteView: env.leftImage === '/assets/satellite.png',
-        asteroidView: env.centerImage === '/assets/asteroid.gif'
+        satelliteView: env.satellite,
+        asteroidView: env.asteroid
       });
     }),
     share()
