@@ -31,3 +31,5 @@ export const changeEngine = createAction('[computer] Change Engine', props<{ dir
 export const changeShields = createAction('[computer]Set Shield Level', props<{ directive: IComputerDirective }>());
 
 export const changeLaser = createAction('[computer] Change Laser', props<{ directive: IComputerDirective}>());
+
+export const changeCourse = createAction('[computer] Change Course', props<{ directive: IComputerDirective }>());

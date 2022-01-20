@@ -43,6 +43,10 @@ export class ComputerService {
             }
 
             if (directive.directObject == DirectObjectTypes.Engines) {
+              this.store.dispatch(ComputerActions.changeEngine({ directive }))
+            }
+
+            if (directive.directObject == DirectObjectTypes.Engines) {
                 this.store.dispatch(ComputerActions.changeEngine({ directive }))
             }
 
@@ -53,6 +57,10 @@ export class ComputerService {
             if(directive.directObject == DirectObjectTypes.Laser) {
               this.store.dispatch(ComputerActions.changeLaser({ directive }))
             }
+
+            if(directive.directObject == DirectObjectTypes.Course) {
+              this.store.dispatch(ComputerActions.changeCourse({ directive }))
+          }
         });
     }
 

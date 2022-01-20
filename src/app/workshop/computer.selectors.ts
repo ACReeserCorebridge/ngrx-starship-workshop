@@ -68,3 +68,10 @@ export const selectTractorBeam = createSelector(
       return state.tractorbeam
     }
 );
+
+export const selectCourse = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.course
+  }
+);

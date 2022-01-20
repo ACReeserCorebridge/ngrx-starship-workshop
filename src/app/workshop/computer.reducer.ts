@@ -11,6 +11,7 @@ import { echo, loadNavDataSuccess } from "./computer.actions";
 import { EngineService } from "./services/engine-service";
 import { ShieldService } from "./services/shield-service";
 import { LaserService } from "./services/laser-service";
+import { CourseService } from "./services/course-service";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -43,7 +44,7 @@ export interface ComputerState {
     satelliteView: boolean,
     asteroidView: boolean,
     laserView: boolean,
-    tractorView: boolean,
+    tractorView: boolean
 }
 
 export const InitialComputerState: ComputerState = {
@@ -60,7 +61,7 @@ export const InitialComputerState: ComputerState = {
     satelliteView: false,
     asteroidView: false,
     laserView: false,
-    tractorView: false,
+    tractorView: false
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -109,6 +110,12 @@ export const computerReducer = createReducer<ComputerState>(
           ...state,
           laser: LaserService.ChangeLaserBasedOnDirective(action.directive, state.laser)
         }
+    }),
+    on(ComputerActions.changeCourse, (state, action) => {
+          return {
+              ...state,
+              orbit: CourseService.ChangeCourseBasedOnDirective(action.directive, state.course)
+          }
     })
 
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
