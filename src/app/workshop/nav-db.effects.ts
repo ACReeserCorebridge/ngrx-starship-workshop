@@ -27,7 +27,10 @@ export class NavDBEffects {
   handleLoadNavDataError$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ComputerActions.loadNavDataError),
-      tap(action => { console.log("Error when fetching Navigation Data") })
+      tap(action => { 
+        console.log("Error when fetching Navigation Data");
+        alert("Error when fetching Navigation Data. Please refresh the page")
+      })
     ),
     { dispatch: false }
   )

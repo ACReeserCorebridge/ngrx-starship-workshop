@@ -4,7 +4,7 @@
  * all main computer logic should go in this file
  */
 import { createReducer, on } from "@ngrx/store";
-import { IComputerDirective, IExpectations } from "../challenge.service";
+import { IComputerDirective, IExpectations, SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
 import { ComputerActions } from "./action-types";
 import { echo, loadNavDataSuccess } from "./computer.actions";
@@ -12,6 +12,7 @@ import { EngineService } from "./services/engine-service";
 import { ShieldService } from "./services/shield-service";
 import { LaserService } from "./services/laser-service";
 import { CourseService } from "./services/course-service";
+import { LocationService } from "./services/location-service";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -37,13 +38,12 @@ export interface ComputerState {
     docking: boolean,
     engine: number,
     laser: number,
-    location: string,
-    course: string,
+    location: SolarSystemLocation,
+    course: SolarSystemLocation,
     shield: number,
     tractorbeam: boolean,
     satelliteView: boolean,
     asteroidView: boolean,
-    laserView: boolean,
     tractorView: boolean
 }
 
@@ -60,7 +60,6 @@ export const InitialComputerState: ComputerState = {
     tractorbeam: false,
     satelliteView: false,
     asteroidView: false,
-    laserView: false,
     tractorView: false
 }
 
@@ -96,13 +95,15 @@ export const computerReducer = createReducer<ComputerState>(
     on(ComputerActions.changeEngine, (state, action) => {
         return {
             ...state,
-            engine: EngineService.ChangeEngineBasedOnDirective(action.directive, state.engine)
+            engine: EngineService.ChangeEngineBasedOnDirective(action.directive, state.engine),
+            location: LocationService.DefineLocationBasedOnEngineDirectives(action.directive, state.course, state.location)
         }
     }),
     on(ComputerActions.changeShields, (state, action) => {
         return {
           ...state,
-          shield: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield)
+          shield: ShieldService.ChangeShieldBasedOnDirective(action.directive, state.shield),
+          laser: LaserService.ChangeLaserBasedOnShield(action.directive, state.laser)
         }
     }),
     on(ComputerActions.changeLaser, (state, action) => {
@@ -114,14 +115,8 @@ export const computerReducer = createReducer<ComputerState>(
     on(ComputerActions.changeCourse, (state, action) => {
           return {
               ...state,
-              orbit: CourseService.ChangeCourseBasedOnDirective(action.directive, state.course)
+              course: CourseService.ChangeCourseBasedOnDirective(action.directive, state.course) 
           }
     })
-
-    //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
-    //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
-    //TODO: add a lot more reducer action logic!
-    // https://ngrx.io/guide/store/reducers
-    // there should be a lot of logic in here!
 );
 

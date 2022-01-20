@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
-import { IComputerDirective, DirectObject } from "../challenge.service";
+import { IComputerDirective } from "../challenge.service";
 import { ComputerActions } from "./action-types";
-import { echo, loadNavData } from "./computer.actions";
 import { DirectObjectTypes } from "./direct-object-types";
 
 /**
@@ -21,7 +20,7 @@ export class ComputerService {
      * this is called on the captain's very first voice event
      */
     public Initialize() {
-        this.store.dispatch(loadNavData());
+        this.store.dispatch(ComputerActions.loadNavData());
     }
     /**
      * this is called when the captain commands the computer to do one or more things
@@ -43,24 +42,20 @@ export class ComputerService {
             }
 
             if (directive.directObject == DirectObjectTypes.Engines) {
-              this.store.dispatch(ComputerActions.changeEngine({ directive }))
-            }
-
-            if (directive.directObject == DirectObjectTypes.Engines) {
                 this.store.dispatch(ComputerActions.changeEngine({ directive }))
             }
 
-            if(directive.directObject == DirectObjectTypes.Shields) {
-              this.store.dispatch(ComputerActions.changeShields({ directive }))
+            if (directive.directObject == DirectObjectTypes.Shields) {
+                this.store.dispatch(ComputerActions.changeShields({ directive }))
             }
 
-            if(directive.directObject == DirectObjectTypes.Laser) {
-              this.store.dispatch(ComputerActions.changeLaser({ directive }))
+            if (directive.directObject == DirectObjectTypes.Laser) {
+                this.store.dispatch(ComputerActions.changeLaser({ directive }))
             }
 
-            if(directive.directObject == DirectObjectTypes.Course) {
-              this.store.dispatch(ComputerActions.changeCourse({ directive }))
-          }
+            if (directive.directObject == DirectObjectTypes.Course) {
+                this.store.dispatch(ComputerActions.changeCourse({ directive }))
+            }
         });
     }
 

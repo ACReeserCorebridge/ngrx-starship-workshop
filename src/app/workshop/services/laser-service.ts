@@ -21,4 +21,14 @@ export class LaserService {
 
         return currentLaserValue;
     }
+
+    /**
+     * If the shield is fully engaged we need to shutdown the laser
+     * @param directive 
+     * @param currentLaserValue 
+     * @returns 
+     */
+    public static ChangeLaserBasedOnShield(directive: IComputerDirective, currentLaserValue: number): number {
+        return (directive.verb == 'engage' && directive.adverb == 'fully') ? MIN_LASER : currentLaserValue
+    }
 }
