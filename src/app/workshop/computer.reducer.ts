@@ -13,6 +13,7 @@ import { ShieldService } from "./services/shield-service";
 import { LaserService } from "./services/laser-service";
 import { CourseService } from "./services/course-service";
 import { LocationService } from "./services/location-service";
+import { MessageService } from "./services/message-service";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -67,7 +68,7 @@ export const computerReducer = createReducer<ComputerState>(
         return {
             ...state,
             echoMessages: [
-                action.message,
+                MessageService.directivesToMessage(action.directives),
                 ...state.echoMessages
             ]
         };

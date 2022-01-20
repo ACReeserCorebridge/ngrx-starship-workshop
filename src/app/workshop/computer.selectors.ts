@@ -40,7 +40,6 @@ export const selectViewscreen = createSelector(
     selectLaserView,
     selectTractorView,
     (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean) => {
-        //TODO: remove all the random state!
         const view: ViewscreenState = {
             location: state.location,
             course: state.course,

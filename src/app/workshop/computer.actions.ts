@@ -10,10 +10,7 @@ import { NavigationData } from "../nav-db.service";
 /**
  * this is an example action, feel free to change it
  */
-export const echo = createAction(
-    '[computer] echo',
-    props<{ message: string }>()
-);
+export const echo = createAction('[computer] echo', props<{ directives: IComputerDirective[] }>());
 
 // these three actions are for loading Navigation data
 export const loadNavData = createAction('[computer] Load Navigation Data');
