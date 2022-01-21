@@ -1,8 +1,8 @@
 /**
  * computer selector file!
- * 
+ *
  * all main computer selectors go in this file
- * 
+ *
  * this file should be free of any business logic or Math.random() calls!
  */
 import { createSelector } from "@ngrx/store";
@@ -36,8 +36,7 @@ export const selectViewscreen = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.engine;
     }
 );
 
@@ -52,8 +51,7 @@ export const selectLasers = createSelector(
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.random() > 0.5
+        return state.docking;
     }
 );
 
