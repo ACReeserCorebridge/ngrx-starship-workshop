@@ -22,9 +22,7 @@ export interface ViewscreenState {
   centerImage: string|undefined,
   rightImage: string|undefined,
   laser: boolean,
-  tractor: boolean,
-  satellite: boolean,
-  asteroid: boolean
+  tractor: boolean
 }
 
 @Component({
