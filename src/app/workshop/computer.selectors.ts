@@ -96,9 +96,7 @@ export const selectViewscreen = createSelector(
     selectCurrentNavLocationData,
     selectLaserView,
     selectTractorView,
-    selectSatelliteView,
-    selectAsteroidView,
-    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean, satelliteView: boolean, asteroidView: boolean) => {
+    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean) => {
         const view: ViewscreenState = {
             location: state.location,
             course: state.course,
@@ -106,9 +104,7 @@ export const selectViewscreen = createSelector(
             centerImage: currentNavLocation?.centerImage,
             rightImage: currentNavLocation?.rightImage,
             laser: laserView,
-            tractor: tractorView,
-            satellite: satelliteView,
-            asteroid: asteroidView
+            tractor: tractorView
         };
         return view;
     }
