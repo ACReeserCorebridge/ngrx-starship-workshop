@@ -35,11 +35,11 @@ export class ComputerService {
         directives.forEach(directive => {
             switch (directive.directObject) {
                 case DirectObjectTypes.DockingClamp:
-                    this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" }))
+                    this.store.dispatch(ComputerActions.switchDockingClamp({ directive }))
                     break;
 
                 case DirectObjectTypes.TractorBeam:
-                    this.store.dispatch(ComputerActions.switchTractorBeam({ enable: directive.verb == "engage" }))
+                    this.store.dispatch(ComputerActions.switchTractorBeam({ directive }))
                     break;
 
                 case DirectObjectTypes.Engines:

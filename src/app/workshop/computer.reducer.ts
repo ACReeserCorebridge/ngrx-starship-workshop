@@ -74,22 +74,28 @@ export const computerReducer = createReducer<ComputerState>(
         };
     }),
     on(ComputerActions.loadNavDataSuccess, (state, action) => {
+        let navCourseData = action.navs.find(nav => nav.location == state.course);
+
         return {
             ...state,
-            navs: action.navs
+            navs: action.navs,
+            centerImage: navCourseData?.centerImage,
+            leftImage: navCourseData?.leftImage
         }
     }),
     on(ComputerActions.switchDockingClamp, (state, action) => {
         return {
             ...state,
-            docking: action.enable
+            docking: action.directive.verb == "engage"
         }
     }),
     on(ComputerActions.switchTractorBeam, (state, action) => {
+        let isEngage = action.directive.verb == "engage"
+
         return {
             ...state,
-            tractorbeam: action.enable,
-            leftImage: action.enable == false && state.course == 'LunaOrbit' ? undefined : state.leftImage
+            tractorbeam: isEngage,
+            leftImage: isEngage == false && state.course == 'LunaOrbit' ? undefined : state.leftImage
         }
     }),
     on(ComputerActions.changeEngine, (state, action) => {
