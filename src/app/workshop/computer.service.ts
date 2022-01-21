@@ -33,28 +33,30 @@ export class ComputerService {
 
         //TODO: decide which actions to dispatch based on the directives passed in!
         directives.forEach(directive => {
-            if (directive.directObject == DirectObjectTypes.DockingClamp) {
-                this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" }))
-            }
+            switch (directive.directObject) {
+                case DirectObjectTypes.DockingClamp:
+                    this.store.dispatch(ComputerActions.switchDockingClamp({ enable: directive.verb == "engage" }))
+                    break;
 
-            if (directive.directObject == DirectObjectTypes.TractorBeam) {
-                this.store.dispatch(ComputerActions.switchTractorBeam({ enable: directive.verb == "engage" }))
-            }
+                case DirectObjectTypes.TractorBeam:
+                    this.store.dispatch(ComputerActions.switchTractorBeam({ enable: directive.verb == "engage" }))
+                    break;
 
-            if (directive.directObject == DirectObjectTypes.Engines) {
-                this.store.dispatch(ComputerActions.changeEngine({ directive }))
-            }
+                case DirectObjectTypes.Engines:
+                    this.store.dispatch(ComputerActions.changeEngine({ directive }))
+                    break;
 
-            if (directive.directObject == DirectObjectTypes.Shields) {
-                this.store.dispatch(ComputerActions.changeShields({ directive }))
-            }
+                case DirectObjectTypes.Shields:
+                    this.store.dispatch(ComputerActions.changeShields({ directive }))
+                    break;
 
-            if (directive.directObject == DirectObjectTypes.Laser) {
-                this.store.dispatch(ComputerActions.changeLaser({ directive }))
-            }
+                case DirectObjectTypes.Laser:
+                    this.store.dispatch(ComputerActions.changeLaser({ directive }))
+                    break;
 
-            if (directive.directObject == DirectObjectTypes.Course) {
-                this.store.dispatch(ComputerActions.changeCourse({ directive }))
+                case DirectObjectTypes.Course:
+                    this.store.dispatch(ComputerActions.changeCourse({ directive }))
+                    break;
             }
         });
     }
