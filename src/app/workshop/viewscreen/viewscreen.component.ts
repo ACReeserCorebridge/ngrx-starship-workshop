@@ -44,8 +44,8 @@ export class ViewscreenComponent {
         course: env.course,
         tractorView: env.tractor,
         laserView: env.laser,
-        satelliteView: env.satellite,
-        asteroidView: env.asteroid
+        satelliteView: env.leftImage === '/assets/satellite.png',
+        asteroidView: env.centerImage === '/assets/asteroid.gif'
       });
     }),
     share()
