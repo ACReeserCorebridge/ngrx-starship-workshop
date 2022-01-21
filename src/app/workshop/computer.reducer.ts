@@ -43,8 +43,8 @@ export interface ComputerState {
     course: SolarSystemLocation,
     shield: number,
     tractorbeam: boolean,
-    satelliteView: boolean,
-    asteroidView: boolean
+    leftImage: string | undefined,
+    centerImage: string | undefined
 }
 
 export const InitialComputerState: ComputerState = {
@@ -58,8 +58,8 @@ export const InitialComputerState: ComputerState = {
     course: 'LEO',
     shield: 0,
     tractorbeam: false,
-    satelliteView: false,
-    asteroidView: false
+    leftImage: undefined,
+    centerImage: undefined
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -89,7 +89,7 @@ export const computerReducer = createReducer<ComputerState>(
         return {
             ...state,
             tractorbeam: action.enable,
-            satelliteView: action.enable
+            leftImage: action.enable == false && state.course == 'LunaOrbit' ? undefined : state.leftImage
         }
     }),
     on(ComputerActions.changeEngine, (state, action) => {
@@ -111,16 +111,17 @@ export const computerReducer = createReducer<ComputerState>(
         return {
           ...state,
           laser: newLaserState,
-          asteroidView: newLaserState == 0
+          centerImage: newLaserState > 0 && state.course == "AsteroidBelt" ? undefined : state.centerImage
         }
     }),
     on(ComputerActions.changeCourse, (state, action) => {
           let newCourse = CourseService.ChangeCourseBasedOnDirective(action.directive, state.course);
+          let navCourseData = state.navs.find(nav => nav.location == newCourse);
           return {
               ...state,
               course: newCourse,
-              satelliteView: newCourse == "LunaOrbit",
-              asteroidView: newCourse == "AsteroidBelt"
+              leftImage: navCourseData?.leftImage,
+              centerImage: navCourseData?.centerImage
           }
     })
 );

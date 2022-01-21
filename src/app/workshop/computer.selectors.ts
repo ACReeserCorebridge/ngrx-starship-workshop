@@ -21,31 +21,17 @@ export const selectCurrentNavLocationData = createSelector(
   }
 );
 
+export const selectCurrentNavCourseData = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.navs.find(nav => nav.location == state.course)
+  }
+);
+
 export const selectLaserView = createSelector(
   selectComputer,
   (state: ComputerState) => {
     return state.laser > 0;
-  }
-);
-
-export const selectTractorView = createSelector(
-  selectComputer,
-  (state: ComputerState) => {
-    return state.tractorbeam;
-  }
-);
-
-export const selectSatelliteView = createSelector(
-  selectComputer,
-  (state: ComputerState) => {
-    return state.satelliteView;
-  }
-);
-
-export const selectAsteroidView = createSelector(
-  selectComputer,
-  (state: ComputerState) => {
-    return state.asteroidView;
   }
 );
 
@@ -94,17 +80,17 @@ export const selectCourse = createSelector(
 export const selectViewscreen = createSelector(
     selectComputer,
     selectCurrentNavLocationData,
+    selectCurrentNavCourseData,
     selectLaserView,
-    selectTractorView,
-    (state: ComputerState, currentNavLocation: NavigationData | undefined, laserView: boolean, tractorView: boolean) => {
+    (state: ComputerState, currentNavLocation: NavigationData | undefined, currentNavCourse: NavigationData | undefined, laserView: boolean) => {
         const view: ViewscreenState = {
             location: state.location,
             course: state.course,
-            leftImage: currentNavLocation?.leftImage,
-            centerImage: currentNavLocation?.centerImage,
-            rightImage: currentNavLocation?.rightImage,
+            leftImage: state.leftImage,
+            centerImage: state.centerImage,
+            rightImage: currentNavCourse?.rightImage,
             laser: laserView,
-            tractor: tractorView
+            tractor: state.tractorbeam
         };
         return view;
     }
