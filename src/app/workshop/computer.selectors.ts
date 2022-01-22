@@ -63,5 +63,5 @@ export const selectShields = createSelector(
 //TODO: finish up the tractorbeam selector!
 export const selectTractorbeam = createSelector(
     selectComputer,
-    (state: ComputerState) => state.tractorBeam
+    (state: ComputerState) => state.tractorbeam
 );
