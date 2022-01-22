@@ -5,7 +5,8 @@
  */
 import { createReducer, on } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
-import { echo, loadNavDataSuccess } from "./computer.actions";
+import { SolarSystemLocation } from "../challenge.service"; //'LunaOrbit'|'AsteroidBelt'|'LEO';
+import { echo, loadNavDataSuccess, enableTractorBeam, shieldUp, docking, laserUp, selectEngine } from "./computer.actions";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -24,12 +25,29 @@ export interface ComputerState{
      * 
      * feel free to change or remove this
      */
-    echoMessages: string[]
+    echoMessages: string[],
+    enableTractorBeam: boolean,
+    shieldPercentage: number
+    navigationData: NavigationData[],
+    enableDocking: boolean,
+    laserPercentage: number,
+    enginePercentage: number
     //TODO: add a lot more state!
 }
 
 export const InitialComputerState: ComputerState = {
-    echoMessages: []
+    echoMessages: [],
+    enableTractorBeam: false,
+    shieldPercentage: 5,
+    navigationData: [{
+        location: 'LEO',
+        leftImage: 'left',
+        centerImage: 'center',
+        rightImage: 'right'
+    }],
+    enableDocking: false,
+    laserPercentage: 6,
+    enginePercentage: 6
     //TODO: add additional initial state!
 }
 
@@ -44,11 +62,48 @@ export const computerReducer = createReducer<ComputerState>(
             ]
         };
     }),
+    on(enableTractorBeam, (state, action) => {
+        return {
+            ...state,
+            enableTractorBeam: action.status
+        };
+    }),
+    on(shieldUp, (state, action) => {
+        return {
+            ...state,
+            shieldPercentage: state.shieldPercentage + 1
+        };
+    }),
+    on(loadNavDataSuccess, (state, action) => {
+        return {
+            ...state,
+            navigationData: state.navigationData
+        };
+    }),
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
     //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
     //TODO: add a lot more reducer action logic!
     // https://ngrx.io/guide/store/reducers
     // there should be a lot of logic in here!
+    on(docking, (state, action) => {
+        return {
+            ...state,
+            enableTractorBeam: action.status
+        };
+    }),
+    on(laserUp, (state, action) => {
+        return {
+            ...state,
+            laserPercentage: state.laserPercentage + 4
+        };
+    }),
+    on(selectEngine, (state, action) => {
+        
+        return {
+            ...state,
+            enginePercentage: state.laserPercentage == 10 ? state.laserPercentage : state.laserPercentage + 2
+        };
+    }),
 );
 
  

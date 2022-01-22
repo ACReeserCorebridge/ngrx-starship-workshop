@@ -36,35 +36,35 @@ export const selectViewscreen = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.enginePercentage
     }
 );
 
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.laserPercentage;
     }
 );
 
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.random() > 0.5
+        return state.enableDocking
     }
 );
 
-//TODO: finish up the shield selector!
-// export const selectShields = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectShields = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        return state.shieldPercentage;
+    }
+);
 
-//TODO: finish up the tractorbeam selector!
-// export const selectTractorbeam = createSelector(
-//     ??,
-//     (??) => ??
-// );
+
+export const selectTractorbeam = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        return state.enableTractorBeam;
+    }
+);
