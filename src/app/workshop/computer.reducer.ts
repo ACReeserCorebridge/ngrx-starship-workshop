@@ -1,4 +1,14 @@
-import { disengageDockingClamp, 
+/**
+ * computer reducer file!
+ *
+ * all main computer logic should go in this file
+ */
+import { createReducer, on } from "@ngrx/store";
+import { NavigationData } from "../nav-db.service";
+import { SolarSystemLocation } from '../challenge.service';
+import { 
+    echo,
+    disengageDockingClamp, 
     disengageEngine, 
     disengageTractorbeam, 
     engageTractorbeam, 
@@ -12,16 +22,8 @@ import { disengageDockingClamp,
     halfwayEngageLaser,
     plotCourseLEO,
     disengageShields,
-    engageDockingClamp} from './computer.actions';
-/**
- * computer reducer file!
- *
- * all main computer logic should go in this file
- */
-import { createReducer, on } from "@ngrx/store";
-import { NavigationData } from "../nav-db.service";
-import { echo, loadNavDataSuccess } from "./computer.actions";
-import { SolarSystemLocation } from '../challenge.service';
+    engageDockingClamp,
+    loadNavDataSuccess} from './computer.actions';
 
 /**
  * This is the "slice" that you need to fill out!
@@ -43,25 +45,31 @@ export interface ComputerState {
     echoMessages: string[];
     engine: number;
     docking: boolean;
-    shields: number;
+    shield: number;
     tractorbeam: boolean;
     tractorView: boolean;
     satelliteView: boolean;
     course?: SolarSystemLocation;
-    laserView?:boolean;
+    location?: SolarSystemLocation;
+    laserView:boolean;
     asteroidView?:boolean;
-
-
-    //TODO: add a lot more state!
+    laser: number;
+    navData: NavigationData[];
 }
 
 export const InitialComputerState: ComputerState = {
     echoMessages: [],
-    engine: 0,
+    navData: [],
     docking: true,
-    shields: 0,
+    engine: 0,
+    laser: 0,
+    course: 'LEO',
+    location: 'LEO',
+    shield: 0,
     tractorbeam: false,
     satelliteView: false,
+    asteroidView: false,
+    laserView: false,
     tractorView: false,
 }
 
@@ -75,6 +83,12 @@ export const computerReducer = createReducer<ComputerState>(
                 ...state.echoMessages
             ]
         };
+    }),
+    on(loadNavDataSuccess, (state, action) => {
+        return {
+            ...state,
+            navData: action.navs
+        }
     }),
     on(disengageDockingClamp, (state, action) => {
         return {
@@ -91,7 +105,8 @@ export const computerReducer = createReducer<ComputerState>(
     on(fullyEngageEngine, (state, action) => {
         return {
             ...state,
-            engine: 10
+            engine: 10,
+            location: state.course!
         }
     }),
     on(plotCourseLunaOrbit, (state, action) => {
@@ -104,7 +119,7 @@ export const computerReducer = createReducer<ComputerState>(
     on(disengageEngine, (state, action) => {
         return {
             ...state,
-            engine: 0
+            engine: 0,
         }
     }),
     on(engageTractorbeam, (state, action) => {
@@ -119,7 +134,8 @@ export const computerReducer = createReducer<ComputerState>(
             ...state,
             satelliteView: false,
             tractorbeam: false,
-            tractorView: false
+            tractorView: false,
+            location: undefined
         }
     }),
     on(plotCourseAsteroidBelt, (state, action) => {
@@ -131,7 +147,7 @@ export const computerReducer = createReducer<ComputerState>(
     on(halfwayEngageShields, (state, action) => {
         return {
             ...state,
-            shields: 5,
+            shield: 5,
             laserView: false,
             asteroidView: true
         }
@@ -140,6 +156,7 @@ export const computerReducer = createReducer<ComputerState>(
         return {
             ...state,
             engine: 5,
+            location: state.course!
         }
     }),
     on(halfwayEngageLaser, (state, action) => {
@@ -154,14 +171,15 @@ export const computerReducer = createReducer<ComputerState>(
     on(fullyEngageShields, (state, action) => {
         return {
             ...state,
-            shields: 10,
+            shield: 10,
+            laser: 0,
             laserView: false,
         }
     }),
     on(disengageShields, (state, action) => {
         return {
             ...state,
-            shields: 0
+            shield: 0
         }
     }),
     on(plotCourseLEO, (state, action) => {
@@ -173,16 +191,9 @@ export const computerReducer = createReducer<ComputerState>(
     on(engageDockingClamp, (state, action) => {
         return {
             ...state,
-            dockingO: true
+            docking: true
         }
     }),
 
-
-
-    //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
-    //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
-    //TODO: add a lot more reducer action logic!
-    // https://ngrx.io/guide/store/reducers
-    // there should be a lot of logic in here!
 );
 

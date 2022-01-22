@@ -16,18 +16,20 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
         const locations: SolarSystemLocation[] = ['LEO', 'LunaOrbit', 'AsteroidBelt'];
         const planets = ['/assets/mars.png', '/assets/SunRed.png', undefined];
         const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined];
+
+        const navData = state.navData.find(x => x.location === state.location);
+
         const view: ViewscreenState = {
-            location: locations[Math.floor(Math.random() * 3)],
-            course: locations[Math.floor(Math.random() * 4)],
-            leftImage: satellites[Math.floor(Math.random() * 3)],
-            centerImage: planets[Math.floor(Math.random() * 3)],
-            rightImage: satellites[Math.floor(Math.random() * 3)],
-            laser: Math.random() > 0.5,
-            tractor: Math.random() > 0.5,
+            location: navData?.location || 'LEO',
+            course: state.course,
+            leftImage: navData?.leftImage,
+            centerImage: state.asteroidView ? navData?.centerImage : undefined,
+            rightImage: navData?.rightImage,
+            laser: state.laserView,
+            tractor: state.tractorView,
         };
         return view;
     }
@@ -43,8 +45,7 @@ export const selectEngine = createSelector(
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.laser;
     }
 );
 
@@ -57,10 +58,9 @@ export const selectDockingClamp = createSelector(
 
 export const selectShields = createSelector(
     selectComputer,
-    (state: ComputerState) => state.shields
+    (state: ComputerState) => state.shield
 );
 
-//TODO: finish up the tractorbeam selector!
 export const selectTractorbeam = createSelector(
     selectComputer,
     (state: ComputerState) => state.tractorbeam
