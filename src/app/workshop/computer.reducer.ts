@@ -28,6 +28,10 @@ export interface ComputerState{
     echoMessages: string[];
     engine: number;
     docking: boolean;
+    shields: number;
+    tractorBeam: boolean;
+
+
     //TODO: add a lot more state!
 }
 
@@ -35,6 +39,8 @@ export const InitialComputerState: ComputerState = {
     echoMessages: [],
     engine: 0,
     docking: true,
+    shields: 0,
+    tractorBeam: false,
 }
 
 export const computerReducer = createReducer<ComputerState>(
