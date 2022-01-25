@@ -17,7 +17,7 @@ import { echo, loadNavDataSuccess, enableTractorBeam, shieldUp, docking, laserUp
  * All of the visual components will select their state from this central
  * state location.
  */
-export interface ComputerState{
+export interface ComputerState {
     /**
      * these messages are displayed by the computer-messages component
      * 
@@ -47,7 +47,7 @@ export const InitialComputerState: ComputerState = {
     }],
     enableDocking: false,
     laserPercentage: 6,
-    enginePercentage: 6
+    enginePercentage: 6,
     //TODO: add additional initial state!
 }
 
@@ -71,13 +71,13 @@ export const computerReducer = createReducer<ComputerState>(
     on(shieldUp, (state, action) => {
         return {
             ...state,
-            shieldPercentage: state.shieldPercentage + 1
+            shieldPercentage: action.percentage
         };
     }),
     on(loadNavDataSuccess, (state, action) => {
         return {
             ...state,
-            navigationData: state.navigationData
+            navigationData: action.navs
         };
     }),
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
@@ -94,14 +94,13 @@ export const computerReducer = createReducer<ComputerState>(
     on(laserUp, (state, action) => {
         return {
             ...state,
-            laserPercentage: state.laserPercentage + 4
+            laserPercentage: action.percentage
         };
     }),
     on(selectEngine, (state, action) => {
-        
         return {
             ...state,
-            enginePercentage: state.laserPercentage == 10 ? state.laserPercentage : state.laserPercentage + 2
+            enginePercentage: action.percentage
         };
     }),
 );

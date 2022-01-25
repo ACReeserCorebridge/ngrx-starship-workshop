@@ -21,13 +21,13 @@ export const selectViewscreen = createSelector(
         const planets = ['/assets/mars.png', '/assets/SunRed.png', undefined];
         const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined];
         const view: ViewscreenState = {
-            location: locations[Math.floor(Math.random() * 3)],
-            course: locations[Math.floor(Math.random() * 4)],
-            leftImage: satellites[Math.floor(Math.random() * 3)],
-            centerImage: planets[Math.floor(Math.random() * 3)],
-            rightImage: satellites[Math.floor(Math.random() * 3)],
-            laser: Math.random() > 0.5,
-            tractor: Math.random() > 0.5,
+            location: state.navigationData[0].location,
+            course: state.navigationData[0].location,
+            leftImage: state.navigationData[0].leftImage,
+            centerImage: state.navigationData[0].centerImage,
+            rightImage: state.navigationData[0].rightImage,
+            laser: state.laserPercentage >= 5,
+            tractor: state.enableTractorBeam,
         };
         return view;
     }
@@ -60,7 +60,6 @@ export const selectShields = createSelector(
         return state.shieldPercentage;
     }
 );
-
 
 export const selectTractorbeam = createSelector(
     selectComputer,

@@ -20,7 +20,8 @@ export const enableTractorBeam = createAction(
 );
 
 export const shieldUp = createAction(
-    '[computer] shield up'
+    '[computer] shield up',
+    props<{percentage: number}>()
 );
 
 export const docking = createAction(
@@ -29,11 +30,13 @@ export const docking = createAction(
 );
 
 export const laserUp = createAction(
-    '[computer] laser up'
+    '[computer] laser up',
+    props<{percentage: number}>()
 );
 
 export const selectEngine = createAction(
-    '[computer] select engine'
+    '[computer] select engine',
+    props<{percentage: number}>()
 );
 // these three actions are for loading Navigation data
 export const loadNavData = createAction('[computer] Load Navigation Data');
