@@ -26,18 +26,67 @@ export class ComputerService{
      * this is called when the captain commands the computer to do one or more things
      */
     public InterpretDirectives(directives: IComputerDirective[]){
-        //TODO: decide which actions to dispatch based on the directives passed in!
-
         directives.forEach(x => {
-            let verbToNum: number = 0;
-            if(x.verb == 'engage')
-                verbToNum = 10;
+            let loc: string = 'to LEO'
+            let navData: NavigationData[] = [];
+            if(x.adjectivalPhrase) { //'to Luna orbit'|'to the asteroid belt'|'to LEO';
+                switch(x.adjectivalPhrase) {
+                    case 'to Luna orbit':
+                        loc = 'to Luna orbit';
+                        navData = [{
+                            location: 'LunaOrbit',
+                            leftImage: '/assets/satellite.png',
+                            centerImage: '/assets/luna.png',
+                            rightImage: undefined,
+                        }];
+                        break;
+                    case 'to the asteroid belt':
+                        loc = 'to the asteroid belt';
+                        navData = [{
+                            location: 'AsteroidBelt',
+                            leftImage: '/assets/asteroid.png',
+                            centerImage: '/assets/asteroid.gif',
+                            rightImage: '/assets/asteroid.png',
+                        }];
+                        break;
+                    case 'to LEO':
+                        loc = 'to LEO';
+                        navData = [{
+                            location: 'LEO',
+                            leftImage: undefined,
+                            centerImage: '/assets/planet.png',
+                            rightImage: '/assets/spaceStation.png',
+                        }];
+                        break;
+                    default:
+                        return;
+                  }
+            }
 
+            let verbToNum: number = 0; //'engage'|'disengage'|'plot'
             let verbToBoolean: boolean = false;
-            if(x.verb == 'engage')
-                verbToBoolean = true;
+            if(x.verb){
+                switch(x.verb) {
+                    case 'engage':
+                        verbToNum = 10;
+                        verbToBoolean = true;
+                        break;
+                    case 'plot':
+                        verbToNum = 10;
+                        verbToBoolean = true;
+                        break;
+                    case 'disengage':
+                        verbToNum = 10;
+                        verbToBoolean = true;
+                        navData[0].leftImage = undefined; // satelite view should be false
+                        break;
+                    default:
+                        verbToNum = 0
+                        verbToBoolean = false;
+                  }
+            }
             
-            let adverbToNum: number = 0;
+            let adverbToNum: number = 0; //'fully'|'halfway'|'slowly';
             if(x.adverb){
                 switch(x.adverb) {
                     case 'fully':
@@ -47,88 +96,65 @@ export class ComputerService{
                         adverbToNum = 5;
                         break;
                     case 'slowly':
-                        adverbToNum = 3
+                        adverbToNum = 1;
                         break;
                     default:
                         adverbToNum = 0
                   }
+                  verbToNum = adverbToNum
             }
 
-            if(x.directObject === 'tractorbeam'){
-                this.store.dispatch(enableTractorBeam({status: verbToBoolean}));
-
-                if(!verbToBoolean){
-                    this.store.dispatch(loadNavDataSuccess({navs: [{
-                        location: 'LunaOrbit',
-                        leftImage: undefined,
-                        centerImage: '/assets/luna.png',
-                        rightImage: undefined
-                    }]}
-                ));
-                }
-            }
-            if(x.directObject === 'shields'){
-                this.store.dispatch(shieldUp({percentage: verbToNum}));
-            }
+            if(x.directObject) { //'shields'|'engines'|'laser'|'docking clamp'|'tractorbeam'|'course';
+                switch(x.directObject) {
+                    case 'shields':
+                        this.store.dispatch(shieldUp({percentage: verbToNum}));
+                        if(x.adverb == 'halfway') {
+                            this.store.dispatch(laserUp({percentage: 0}));
+                        }
+                        if(x.adverb == 'fully') {
+                            this.store.dispatch(laserUp({percentage: 0}));
+                        }
+                        break;
+                    case 'engines':
+                        this.store.dispatch(selectEngine({percentage: verbToNum}));
+                        if(x.adverb == 'slowly') {
+                            this.store.dispatch(laserUp({percentage: 0}));
+                        }
+                        break;
+                    case 'laser':
+                        this.store.dispatch(laserUp({percentage: verbToNum}));
+                        if(x.adverb == 'halfway' && loc ==  'to the asteroid belt') {
+                        }
+                        break;
+                    case 'docking clamp':
+                        this.store.dispatch(docking({status: verbToBoolean}));
+                        break;
+                    case 'tractorbeam':
+                        this.store.dispatch(enableTractorBeam({status: verbToBoolean}));
             
-            if(x.directObject === 'laser'){
-                if(x.adverb){
-                    verbToNum = adverbToNum;
-                }
-                this.store.dispatch(laserUp({percentage: verbToNum}));
-                if(verbToBoolean){ //if laser is engaged
-                    // this.store.dispatch(shieldUp({percentage: 10}));
-                    this.store.dispatch(loadNavDataSuccess({navs: [{
-                            location: 'AsteroidBelt',
-                            leftImage: '/assets/asteroid.png',
-                            centerImage: undefined,
-                            rightImage: '/assets/asteroid.png'
-                        }]}
-                    ));
-                }
-            }
-
-            if(x.directObject === 'docking clamp'){
-                this.store.dispatch(docking({status: verbToBoolean}));
-            }
-            if(x.directObject === 'engines'){
-                if(x.adverb){
-                    verbToNum = adverbToNum;
-                }
-                // this.store.dispatch(laserUp({percentage: adverbToNum}));
-                this.store.dispatch(shieldUp({percentage: verbToNum}));
-                this.store.dispatch(selectEngine({percentage: verbToNum}));
-            }
-
-            if(x.adjectivalPhrase == 'to Luna orbit') {
-                this.store.dispatch(loadNavDataSuccess({navs: [{
-                        location: 'LunaOrbit',
-                        leftImage: '/assets/satellite.png',
-                        centerImage: '/assets/luna.png',
-                        rightImage: undefined
-                    }]}
-                ));
-            }
-            if(x.adjectivalPhrase == 'to the asteroid belt') {
-                this.store.dispatch(loadNavDataSuccess({navs: [{
-                        location: 'AsteroidBelt',
-                        leftImage: '/assets/asteroid.png',
-                        centerImage: '/assets/asteroid.gif',
-                        rightImage: '/assets/asteroid.png'
-                    }]}
-                ));
-                this.store.dispatch(laserUp({percentage: 0}));
+                        if(x.verb == 'engage'){
+                            this.store.dispatch(selectEngine({percentage: 0})); //expectation line 139 challend.service
+                        }
+                        break;
+                    case 'course':
+                        this.store.dispatch(loadNavDataSuccess({navs: navData}));
+                        if(loc == 'to the asteroid belt') {
+                            this.store.dispatch(enableTractorBeam({status: false}));
+                        }
+                        break;
+                    default:
+                        return;
+                  }
             }
 
             this.store.dispatch(
-                //TODO: you don't have to echo all the directives, do what you want!
                 echo(
                     {
                         message: this.directiveToMessage(x)
                     }
                 )
             )
-        }); //end of foreach
+        }); //endOf foreach
     }
 
     /**
