@@ -110,7 +110,9 @@ export class ComputerService{
                   verbToNum = adverbToNum //verb should be dependent to adverb
             }
 
-            if(x.directObject) { //'shields'|'engines'|'laser'|'docking clamp'|'tractorbeam'|'course';
+            //dispatch depending on directObject
+            // cases: 'shields'|'engines'|'laser'|'docking clamp'|'tractorbeam'|'course';
+            if(x.directObject) {
                 switch(x.directObject) {
                     case 'shields':
                         this.store.dispatch(toggleShield({percentage: verbToNum}));
