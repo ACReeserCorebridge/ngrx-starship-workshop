@@ -1,6 +1,6 @@
 :host{
     border: 1px solid cyan;
-    background: #111;
+    background: #03031a;
     color: cyan;
     border-radius: 8px;
     display: block;
@@ -10,4 +10,8 @@
 .on, .off{
     float: right;
     font-weight: bold;
+}
+
+.off{
+    color: red;
 }

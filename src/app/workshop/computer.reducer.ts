@@ -6,7 +6,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
 import { SolarSystemLocation } from "../challenge.service"; //'LunaOrbit'|'AsteroidBelt'|'LEO';
-import { echo, loadNavDataSuccess, enableTractorBeam, shieldUp, docking, laserUp, selectEngine } from "./computer.actions";
+import { echo, loadNavDataSuccess, toggleTractorBeam, toggleDocking, useLaser, selectEngine, toggleShield } from "./computer.actions";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -32,7 +32,6 @@ export interface ComputerState {
     enableDocking: boolean,
     laserPercentage: number,
     enginePercentage: number
-    //TODO: add a lot more state!
 }
 
 export const InitialComputerState: ComputerState = {
@@ -48,7 +47,6 @@ export const InitialComputerState: ComputerState = {
     enableDocking: false,
     laserPercentage: 6,
     enginePercentage: 6,
-    //TODO: add additional initial state!
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -62,13 +60,13 @@ export const computerReducer = createReducer<ComputerState>(
             ]
         };
     }),
-    on(enableTractorBeam, (state, action) => {
+    on(toggleTractorBeam, (state, action) => {
         return {
             ...state,
             enableTractorBeam: action.status
         };
     }),
-    on(shieldUp, (state, action) => {
+    on(toggleShield, (state, action) => {
         return {
             ...state,
             shieldPercentage: action.percentage
@@ -80,18 +78,13 @@ export const computerReducer = createReducer<ComputerState>(
             navigationData: action.navs
         };
     }),
-    //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
-    //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
-    //TODO: add a lot more reducer action logic!
-    // https://ngrx.io/guide/store/reducers
-    // there should be a lot of logic in here!
-    on(docking, (state, action) => {
+    on(toggleDocking, (state, action) => {
         return {
             ...state,
             enableTractorBeam: action.status
         };
     }),
-    on(laserUp, (state, action) => {
+    on(useLaser, (state, action) => {
         return {
             ...state,
             laserPercentage: action.percentage

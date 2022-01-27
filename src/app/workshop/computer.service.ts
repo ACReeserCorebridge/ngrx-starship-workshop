@@ -3,7 +3,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { Adverb, IComputerDirective } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
-import { echo, shieldUp, enableTractorBeam, loadNavData, docking, laserUp, selectEngine, loadNavDataSuccess } from "./computer.actions";
+import { echo, toggleShield, toggleTractorBeam, loadNavData, toggleDocking, useLaser, selectEngine, loadNavDataSuccess } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -27,9 +27,11 @@ export class ComputerService{
      */
     public InterpretDirectives(directives: IComputerDirective[]){
         directives.forEach(x => {
+            //assign value to navData based on adjectivalPhrase
+            //cases: 'to Luna orbit'|'to the asteroid belt'|'to LEO';
             let loc: string = 'to LEO'
             let navData: NavigationData[] = [];
-            if(x.adjectivalPhrase) { //'to Luna orbit'|'to the asteroid belt'|'to LEO';
+            if(x.adjectivalPhrase) { 
                 switch(x.adjectivalPhrase) {
                     case 'to Luna orbit':
                         loc = 'to Luna orbit';
@@ -63,7 +65,9 @@ export class ComputerService{
                   }
             }
 
-            let verbToNum: number = 0; //'engage'|'disengage'|'plot'
+            //convert verb to number/boolean
+            // cases 'engage'|'disengage'|'plot'
+            let verbToNum: number = 0; 
             let verbToBoolean: boolean = false;
             if(x.verb){
                 switch(x.verb) {
@@ -78,7 +82,7 @@ export class ComputerService{
                     case 'disengage':
                         verbToNum = 10;
                         verbToBoolean = true;
-                        navData[0].leftImage = undefined; // satelite view should be false
+                        navData[0].leftImage = undefined; //satelite view should always be false when disengaged
                         break;
                     default:
                         verbToNum = 0
@@ -86,7 +90,9 @@ export class ComputerService{
                   }
             }
             
-            let adverbToNum: number = 0; //'fully'|'halfway'|'slowly';
+            //convert adverb to number
+            //cases: 'fully'|'halfway'|'slowly'
+            let adverbToNum: number = 0; 
             if(x.adverb){
                 switch(x.adverb) {
                     case 'fully':
@@ -101,46 +107,37 @@ export class ComputerService{
                     default:
                         adverbToNum = 0
                   }
-                  verbToNum = adverbToNum
+                  verbToNum = adverbToNum //verb should be dependent to adverb
             }
 
             if(x.directObject) { //'shields'|'engines'|'laser'|'docking clamp'|'tractorbeam'|'course';
                 switch(x.directObject) {
                     case 'shields':
-                        this.store.dispatch(shieldUp({percentage: verbToNum}));
-                        if(x.adverb == 'halfway') {
-                            this.store.dispatch(laserUp({percentage: 0}));
-                        }
-                        if(x.adverb == 'fully') {
-                            this.store.dispatch(laserUp({percentage: 0}));
-                        }
+                        this.store.dispatch(toggleShield({percentage: verbToNum}));
+
+                        if(x.adverb == 'halfway') this.store.dispatch(useLaser({percentage: 0}));
+                        if(x.adverb == 'fully') this.store.dispatch(useLaser({percentage: 0}));
                         break;
                     case 'engines':
                         this.store.dispatch(selectEngine({percentage: verbToNum}));
-                        if(x.adverb == 'slowly') {
-                            this.store.dispatch(laserUp({percentage: 0}));
-                        }
+
+                        if(x.adverb == 'slowly') this.store.dispatch(useLaser({percentage: 0}));
                         break;
                     case 'laser':
-                        this.store.dispatch(laserUp({percentage: verbToNum}));
-                        if(x.adverb == 'halfway' && loc ==  'to the asteroid belt') {
-                        }
+                        this.store.dispatch(useLaser({percentage: verbToNum}));
                         break;
                     case 'docking clamp':
-                        this.store.dispatch(docking({status: verbToBoolean}));
+                        this.store.dispatch(toggleDocking({status: verbToBoolean}));
                         break;
                     case 'tractorbeam':
-                        this.store.dispatch(enableTractorBeam({status: verbToBoolean}));
+                        this.store.dispatch(toggleTractorBeam({status: verbToBoolean}));
             
-                        if(x.verb == 'engage'){
-                            this.store.dispatch(selectEngine({percentage: 0})); //expectation line 139 challend.service
-                        }
+                        if(x.verb == 'engage') this.store.dispatch(selectEngine({percentage: 0})); //expectation on line 139 of challenge.service
                         break;
                     case 'course':
                         this.store.dispatch(loadNavDataSuccess({navs: navData}));
-                        if(loc == 'to the asteroid belt') {
-                            this.store.dispatch(enableTractorBeam({status: false}));
-                        }
+
+                        if(loc == 'to the asteroid belt') this.store.dispatch(toggleTractorBeam({status: false})); //expectation on line 173 of challenge.service
                         break;
                     default:
                         return;

@@ -14,34 +14,31 @@ export const echo = createAction(
     props<{message: string}>()
 );
 
-export const enableTractorBeam = createAction(
-    '[computer] enable tractor beam',
+export const toggleTractorBeam = createAction(
+    '[computer] Toggle tractor beam',
     props<{status: boolean}>()
 );
 
-export const shieldUp = createAction(
-    '[computer] shield up',
+export const toggleShield = createAction(
+    '[computer] Toggle shield',
     props<{percentage: number}>()
 );
 
-export const docking = createAction(
-    '[computer] docking',
+export const toggleDocking = createAction(
+    '[computer] Docking',
     props<{status: boolean}>()
 );
 
-export const laserUp = createAction(
-    '[computer] laser up',
-    props<{percentage: number}>()
+export const useLaser = createAction(
+    '[computer] Use laser',
+    props<{percentage: number}>() 
 );
 
 export const selectEngine = createAction(
-    '[computer] select engine',
+    '[computer] Switch engine',
     props<{percentage: number}>()
 );
 // these three actions are for loading Navigation data
 export const loadNavData = createAction('[computer] Load Navigation Data');
 export const loadNavDataSuccess = createAction('[computer] Load Navigation Data Success', props<{navs: NavigationData[]}>());
 export const loadNavDataError = createAction('[computer] Load Navigation Data Error');
-
-//TODO: add a lot more action definitions!
-// https://ngrx.io/guide/store/actions

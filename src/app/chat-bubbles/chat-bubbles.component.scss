@@ -28,8 +28,11 @@ div{
     background: cyan;
     color: black;
     padding: 3px;
-    border-bottom: 4px solid #222;
-    border-right: 4px solid #222;
+    border-bottom: 2px solid #ffa500;
+    border-right: 2px solid #ffa500;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 12px;
     &:nth-child(n+2){
         opacity: .8;
         margin-left: 2px;
