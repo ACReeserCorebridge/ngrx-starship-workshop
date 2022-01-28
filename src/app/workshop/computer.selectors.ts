@@ -21,13 +21,13 @@ export const selectViewscreen = createSelector(
         const planets = ['/assets/mars.png', '/assets/SunRed.png', undefined];
         const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined];
         const view: ViewscreenState = {
-            location: locations[Math.floor(Math.random() * 3)],
-            course: locations[Math.floor(Math.random() * 4)],
-            leftImage: satellites[Math.floor(Math.random() * 3)],
-            centerImage: planets[Math.floor(Math.random() * 3)],
-            rightImage: satellites[Math.floor(Math.random() * 3)],
-            laser: Math.random() > 0.5,
-            tractor: Math.random() > 0.5,
+            location: state.viewScreenState.location,
+            course: state.viewScreenState.course,
+            leftImage: state.viewScreenState.leftImage,
+            centerImage: state.viewScreenState.centerImage,
+            rightImage: state.viewScreenState.rightImage,
+            laser: state.viewScreenState.laser,
+            tractor: state.viewScreenState.tractor,
         };
         return view;
     }
@@ -36,35 +36,35 @@ export const selectViewscreen = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.enginePower
     }
 );
 
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.laserPower
     }
 );
 
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.random() > 0.5
+        return state.docking
     }
 );
 
-//TODO: finish up the shield selector!
-// export const selectShields = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectShield = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        return state.shieldPower
+    }
+);
 
-//TODO: finish up the tractorbeam selector!
-// export const selectTractorbeam = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectTrackingBeam = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        return state.tractorbeam
+    }
+);
+
