@@ -83,8 +83,8 @@ export const computerReducer = createReducer<ComputerState>(
         return {
           ...state,
           leftImage: navForCurrentLoc.leftImage || undefined,
-          centerImage: navForCurrentLoc.leftImage || undefined,
-          rightImage: navForCurrentLoc.leftImage || undefined,
+          centerImage: navForCurrentLoc.centerImage || undefined,
+          rightImage: navForCurrentLoc.rightImage || undefined,
           navData: action.navs
         }
       }
