@@ -12,7 +12,7 @@ import { selectViewscreen } from '../computer.selectors';
 
 /**
  * the initial view state that the viewscreen component needs
- * 
+ *
  * you may ADD to the interface but may not REMOVE from it
  */
 export interface ViewscreenState {

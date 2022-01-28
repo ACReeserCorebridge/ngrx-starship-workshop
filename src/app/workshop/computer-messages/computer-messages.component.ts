@@ -1,8 +1,8 @@
 /**
  * this is a completely customizable component
- * 
+ *
  * initially, it just echoes english grammar the captain says
- * 
+ *
  * feel free to change anything it does
  */
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { delay } from 'rxjs';
 import { AppState } from '../../app.state';
+import { selectEchoMessage } from '../computer.selectors';
 
 @Component({
   selector: 'app-computer-messages',
@@ -34,7 +35,7 @@ export class ComputerMessagesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public chat$ = this.store.select(x => x.computer.echoMessages).pipe(
+  public chat$ = this.store.select(selectEchoMessage).pipe(
     delay(660)
   );
 }
