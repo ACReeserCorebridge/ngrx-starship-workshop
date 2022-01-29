@@ -3,7 +3,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { Adverb, IComputerDirective } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
-import { echo, toggleShield, toggleTractorBeam, loadNavData, toggleDocking, useLaser, selectEngine, loadNavDataSuccess } from "./computer.actions";
+import { echo, toggleShield, toggleTractorBeam, loadNavData, toggleDocking, toggleLaser, selectEngine, loadNavDataSuccess } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -27,14 +27,22 @@ export class ComputerService{
      */
     public InterpretDirectives(directives: IComputerDirective[]){
         directives.forEach(x => {
-            //assign value to navData based on adjectivalPhrase
-            //cases: 'to Luna orbit'|'to the asteroid belt'|'to LEO';
-            let loc: string = 'to LEO'
+            this.store.dispatch(
+                echo(
+                    {
+                        message: this.directiveToMessage(x)
+                    }
+                )
+            )
+
+            /**
+             * assign value to navData based on adjectivalPhrase
+             * cases: 'to Luna orbit'|'to the asteroid belt'|'to LEO';
+             */
             let navData: NavigationData[] = [];
             if(x.adjectivalPhrase) { 
                 switch(x.adjectivalPhrase) {
                     case 'to Luna orbit':
-                        loc = 'to Luna orbit';
                         navData = [{
                             location: 'LunaOrbit',
                             leftImage: '/assets/satellite.png',
@@ -43,7 +51,6 @@ export class ComputerService{
                         }];
                         break;
                     case 'to the asteroid belt':
-                        loc = 'to the asteroid belt';
                         navData = [{
                             location: 'AsteroidBelt',
                             leftImage: '/assets/asteroid.png',
@@ -52,7 +59,6 @@ export class ComputerService{
                         }];
                         break;
                     case 'to LEO':
-                        loc = 'to LEO';
                         navData = [{
                             location: 'LEO',
                             leftImage: undefined,
@@ -65,8 +71,10 @@ export class ComputerService{
                   }
             }
 
-            //convert verb to number/boolean
-            // cases 'engage'|'disengage'|'plot'
+            /**
+             * convert verb to number/boolean for later use on the components
+             * cases 'engage'|'disengage'|'plot'
+             */
             let verbToNum: number = 0; 
             let verbToBoolean: boolean = false;
             if(x.verb){
@@ -85,13 +93,15 @@ export class ComputerService{
                         navData[0].leftImage = undefined; //satelite view should always be false when disengaged
                         break;
                     default:
-                        verbToNum = 0
-                        verbToBoolean = false;
+                        return;
                   }
             }
             
-            //convert adverb to number
-            //cases: 'fully'|'halfway'|'slowly'
+            /**
+             * convert adverb to number for later use on the components
+             * also assigned this after the verb because adverb needs to override verb
+             * cases 'fully'|'halfway'|'slowly'
+             */
             let adverbToNum: number = 0; 
             if(x.adverb){
                 switch(x.adverb) {
@@ -105,55 +115,40 @@ export class ComputerService{
                         adverbToNum = 1;
                         break;
                     default:
-                        adverbToNum = 0
+                        return;
                   }
-                  verbToNum = adverbToNum //verb should be dependent to adverb
+                  verbToNum = adverbToNum //override verb value
             }
 
-            //dispatch depending on directObject
-            // cases: 'shields'|'engines'|'laser'|'docking clamp'|'tractorbeam'|'course';
+            /**
+             * dispatch depending on directObject
+             * cases: 'shields'|'engines'|'laser'|'docking clamp'|'tractorbeam'|'course';
+             */
             if(x.directObject) {
                 switch(x.directObject) {
                     case 'shields':
                         this.store.dispatch(toggleShield({percentage: verbToNum}));
-
-                        if(x.adverb == 'halfway') this.store.dispatch(useLaser({percentage: 0}));
-                        if(x.adverb == 'fully') this.store.dispatch(useLaser({percentage: 0}));
                         break;
                     case 'engines':
                         this.store.dispatch(selectEngine({percentage: verbToNum}));
-
-                        if(x.adverb == 'slowly') this.store.dispatch(useLaser({percentage: 0}));
                         break;
                     case 'laser':
-                        this.store.dispatch(useLaser({percentage: verbToNum}));
+                        this.store.dispatch(toggleLaser({percentage: verbToNum}));
                         break;
                     case 'docking clamp':
                         this.store.dispatch(toggleDocking({status: verbToBoolean}));
                         break;
                     case 'tractorbeam':
                         this.store.dispatch(toggleTractorBeam({status: verbToBoolean}));
-            
-                        if(x.verb == 'engage') this.store.dispatch(selectEngine({percentage: 0})); //expectation on line 139 of challenge.service
                         break;
                     case 'course':
                         this.store.dispatch(loadNavDataSuccess({navs: navData}));
-
-                        if(loc == 'to the asteroid belt') this.store.dispatch(toggleTractorBeam({status: false})); //expectation on line 173 of challenge.service
                         break;
                     default:
                         return;
                   }
             }
-
-            this.store.dispatch(
-                echo(
-                    {
-                        message: this.directiveToMessage(x)
-                    }
-                )
-            )
-        }); //endOf foreach
+        });
     }
 
     /**

@@ -5,8 +5,8 @@
  */
 import { createReducer, on } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
-import { SolarSystemLocation } from "../challenge.service"; //'LunaOrbit'|'AsteroidBelt'|'LEO';
-import { echo, loadNavDataSuccess, toggleTractorBeam, toggleDocking, useLaser, selectEngine, toggleShield } from "./computer.actions";
+import { SolarSystemLocation } from "../challenge.service"; 
+import { echo, loadNavDataSuccess, toggleTractorBeam, toggleDocking, toggleLaser, selectEngine, toggleShield} from "./computer.actions";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -18,13 +18,6 @@ import { echo, loadNavDataSuccess, toggleTractorBeam, toggleDocking, useLaser, s
  * state location.
  */
 export interface ComputerState {
-    /**
-     * these messages are displayed by the computer-messages component
-     * 
-     * they are not required or useful, they are just example of state properties
-     * 
-     * feel free to change or remove this
-     */
     echoMessages: string[],
     enableTractorBeam: boolean,
     shieldPercentage: number
@@ -36,17 +29,17 @@ export interface ComputerState {
 
 export const InitialComputerState: ComputerState = {
     echoMessages: [],
-    enableTractorBeam: false,
-    shieldPercentage: 5,
     navigationData: [{
         location: 'LEO',
-        leftImage: 'left',
-        centerImage: 'center',
-        rightImage: 'right'
+        leftImage: '/assets/satellite.png',
+        centerImage: '/assets/planet.png',
+        rightImage: '/assets/spaceStation.png'
     }],
+    enableTractorBeam: false,
+    shieldPercentage: 0,
     enableDocking: false,
-    laserPercentage: 6,
-    enginePercentage: 6,
+    laserPercentage: 0,
+    enginePercentage: 0,
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -84,7 +77,7 @@ export const computerReducer = createReducer<ComputerState>(
             enableTractorBeam: action.status
         };
     }),
-    on(useLaser, (state, action) => {
+    on(toggleLaser, (state, action) => {
         return {
             ...state,
             laserPercentage: action.percentage
