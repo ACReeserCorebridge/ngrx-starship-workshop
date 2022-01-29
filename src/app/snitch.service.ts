@@ -71,7 +71,7 @@ export class SnitchService{
         return (Object.keys(expectation) as Array<keyof IExpectations>).filter((k) => {
             const failure = this.visualState[k] != expectation[k];
             if (failure){
-                // console.log(`${k} expected to be ${expectation[k]}, instead got ${this.visualState[k]}`);
+                console.log(`${k} expected to be ${expectation[k]}, instead got ${this.visualState[k]}`);
             }
             return failure;
         });
@@ -89,7 +89,7 @@ export class SnitchService{
         }
 
         if (errors > 0){
-            // console.log("Expected total power of engine+laser+shields to be between 0 and 10, instead got "+totalPower);
+            console.log("Expected total power of engine+laser+shields to be between 0 and 10, instead got "+totalPower);
             this.metaStatistic$.next({failures: errors});
         }
         return errors;
