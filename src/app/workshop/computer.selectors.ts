@@ -19,25 +19,28 @@ export const selectViewscreen = createSelector(
         //TODO: remove all the random state!
         const locations: SolarSystemLocation[] = ['LEO', 'LunaOrbit', 'AsteroidBelt'];
         const planets = ['/assets/mars.png', '/assets/SunRed.png', undefined];
-        const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined];
+        const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined, '/assets/satellite.png'];
+        const currentlocation: SolarSystemLocation |undefined = locations.find(x => x == state.location);
+
         const view: ViewscreenState = {
-            location: locations[Math.floor(Math.random() * 3)],
-            course: locations[Math.floor(Math.random() * 4)],
-            leftImage: satellites[Math.floor(Math.random() * 3)],
-            centerImage: planets[Math.floor(Math.random() * 3)],
-            rightImage: satellites[Math.floor(Math.random() * 3)],
-            laser: Math.random() > 0.5,
-            tractor: Math.random() > 0.5,
+            location: currentlocation ? currentlocation : 'LEO',
+            course: currentlocation,
+            leftImage: state.leftImage,
+            centerImage: state.centerImage,
+            rightImage: state.rightImage,
+            laser: state.laser,
+            tractor: state.tractor,
         };
         return view;
     }
 );
 
+
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
         //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.enginePower
     }
 );
 
@@ -45,7 +48,7 @@ export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
         //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.laserPower
     }
 );
 
@@ -53,18 +56,19 @@ export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
         //TODO: remove all the random state!
-        return Math.random() > 0.5
+        return state.isDockingClampReady
     }
 );
 
+
 //TODO: finish up the shield selector!
-// export const selectShields = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectShields = createSelector(
+    selectComputer,
+    (state: ComputerState) => state.shieldHealth
+);
 
 //TODO: finish up the tractorbeam selector!
-// export const selectTractorbeam = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectTractorbeam = createSelector(
+    selectComputer,
+    (state: ComputerState) => state.tractorView
+);
