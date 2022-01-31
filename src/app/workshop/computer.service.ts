@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { IComputerDirective } from "../challenge.service";
-import { echo, loadNavData } from "./computer.actions";
+import { course, dockingClamp, echo, engines, laser, loadNavData, shields, tractorbeam } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -12,28 +12,37 @@ import { echo, loadNavData } from "./computer.actions";
 @Injectable({
     providedIn: 'root'
 })
-export class ComputerService{
-    constructor(private store: Store<AppState>){}
+export class ComputerService {
+    constructor(private store: Store<AppState>) { }
 
     /**
      * this is called on the captain's very first voice event
      */
-    public Initialize(){
+    public Initialize() {
         this.store.dispatch(loadNavData());
     }
     /**
      * this is called when the captain commands the computer to do one or more things
      */
-    public InterpretDirectives(directives: IComputerDirective[]){
+    public InterpretDirectives(directives: IComputerDirective[]) {
         //TODO: decide which actions to dispatch based on the directives passed in!
-        directives.forEach(x => this.store.dispatch(
-            //TODO: you don't have to echo all the directives, do what you want!
-            echo(
-                {
-                    message: this.directiveToMessage(x)
-                }
-            )
-        ));
+        directives.forEach(x => {
+            if (x.directObject === 'shields') {
+                this.store.dispatch(shields({ directive: x }));
+            } else if (x.directObject === 'engines') {
+                this.store.dispatch(engines({ directive: x }));
+            } else if (x.directObject === 'laser') {
+                this.store.dispatch(laser({ directive: x }));
+            } else if (x.directObject === 'docking clamp') {
+                this.store.dispatch(dockingClamp({ directive: x }));
+            } else if (x.directObject === 'tractorbeam') {
+                this.store.dispatch(tractorbeam({ directive: x }));
+            } else if (x.directObject === 'course') {
+                this.store.dispatch(course({ directive: x }));
+            }
+
+            this.store.dispatch(echo({ message: this.directiveToMessage(x) }));
+        });
     }
 
     /**
@@ -43,7 +52,7 @@ export class ComputerService{
      * @param d 
      * @returns 
      */
-    private directiveToMessage(d: IComputerDirective): string{
+    private directiveToMessage(d: IComputerDirective): string {
         let result = "ACK > ";
         if (d.adverb)
             result += d.adverb.toUpperCase() + " ";
