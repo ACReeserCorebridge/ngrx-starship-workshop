@@ -16,7 +16,7 @@ import { selectDockingClamp } from '../workshop/computer.selectors';
 export class DockingClampWidgetComponent implements OnInit {
 
   constructor(private store: Store<AppState>, private snitch: SnitchService) { }
-  
+
   ngOnInit(): void {
     this.clamped$.subscribe(x => this.hostClass = x ? 'clamped': 'unclamped');
   }
