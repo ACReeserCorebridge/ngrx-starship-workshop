@@ -4,6 +4,7 @@
  * all action definitions go in this file
  */
 import { createAction, props } from "@ngrx/store";
+import { IComputerDirective } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
 
 /**
@@ -13,6 +14,37 @@ export const echo = createAction(
     '[computer] echo', 
     props<{message: string}>()
 );
+
+export const docking = createAction(
+    '[computer] docking clamp',
+    props<{directive: IComputerDirective}>()
+);
+
+export const engine = createAction(
+    '[computer] engines',
+    props<{directive: IComputerDirective}>()
+);
+
+export const course = createAction(
+    '[computer] course',
+    props<{directive: IComputerDirective}>()
+);
+
+export const tractorbeam = createAction(
+    '[computer] tractorbeam',
+    props<{directive: IComputerDirective}>()
+);
+
+export const shield = createAction(
+    '[computer] shields',
+    props<{directive: IComputerDirective}>()
+);
+
+export const laser = createAction(
+    '[computer] laser',
+    props<{directive: IComputerDirective}>()
+);
+
 
 // these three actions are for loading Navigation data
 export const loadNavData = createAction('[computer] Load Navigation Data');
