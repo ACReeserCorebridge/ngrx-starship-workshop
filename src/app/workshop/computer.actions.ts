@@ -6,6 +6,12 @@
 import { createAction, props } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
 
+export interface GenericActionProperties{
+    directObject: string|undefined,
+    adverb: string|undefined
+    adjectivalPhrase: string|undefined
+}
+
 /**
  * this is an example action, feel free to change it
  */
@@ -20,4 +26,7 @@ export const loadNavDataSuccess = createAction('[computer] Load Navigation Data 
 export const loadNavDataError = createAction('[computer] Load Navigation Data Error');
 
 //TODO: add a lot more action definitions!
+export const engage = createAction('[computer] Engage', props<GenericActionProperties>());
+export const disengage = createAction('[computer] Disengage', props<GenericActionProperties>());
+export const plot = createAction('[computer] Plot', props<GenericActionProperties>())
 // https://ngrx.io/guide/store/actions
