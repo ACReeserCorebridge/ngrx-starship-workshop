@@ -9,14 +9,15 @@ export class PersonalityService{
     private interjections: string[] = [
         'Oh frak!',
         'Shazbot!',
-        'What the frell!',
         "P’tak!",
         "Are you kriffing me?",
         'Smegging disaster!',
         'Grrrrrozit!',
         'Belgium!',
-        '#$%!',
-        '<expletive_deleted>'
+        'Gorram!',
+        'Frelling dren!',
+        'E chu ta!',
+        'Кю!' // Fictional curse from the soviet film "Kin-dza-dza!"
     ];
 
     private frustrations: string[] = [
@@ -26,9 +27,9 @@ export class PersonalityService{
         'Who broke the @?!',
         'This @ is a disgrace!',
     ];
-    
+
     public GetFrustration(wrongs: string[]): string{
         const interjection = this.interjections[Math.floor(Math.random() * this.interjections.length)];
         return `${interjection} ${wrongs.map(x => this.frustrations[Math.floor(Math.random() * this.frustrations.length)].replace('@', x)).join(' ')}`;
     }
-} 
+}
