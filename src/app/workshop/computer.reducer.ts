@@ -5,8 +5,8 @@
  */
 import { createReducer, on } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
-import { echo, loadNavData, loadNavDataError, loadNavDataSuccess, plotCourse, toggleDocking } from "./computer.actions";
-import { SolarSystemLocation } from "../challenge.service";
+import { disengage, echo, half, loadNavData, loadNavDataError, loadNavDataSuccess, plotCourse, slam, slow, toggleDocking, toggleTractor } from "./computer.actions";
+import { DirectObject, SolarSystemLocation } from "../challenge.service";
 
 export class HiddenState {
     nav: NavigationData[] = [];
@@ -42,12 +42,30 @@ export class HiddenState {
         return Number(`0x${this.data[0]}`);
     }
 
+    public set shield(value: number) {
+        let chars = [...this.data];
+        chars[0] = value.toString(16);
+        this.data = chars.join("");
+    }
+
     public get engine(): number {
         return Number(`0x${this.data[1]}`);
     }
 
+    public set engine(value: number) {
+        let chars = [...this.data];
+        chars[1] = value.toString(16);
+        this.data = chars.join("");
+    }
+
     public get laser(): number {
         return Number(`0x${this.data[2]}`);
+    }
+
+    public set laser(value: number) {
+        let chars = [...this.data];
+        chars[2] = value.toString(16);
+        this.data = chars.join("");
     }
 
     public get docking(): boolean {
@@ -64,18 +82,30 @@ export class HiddenState {
         return this.data[4] == "1";
     }
 
+    public set tractor(value: boolean) {
+        let chars = [...this.data];
+        chars[4] = value ? '1' : '0';
+        this.data = chars.join("");
+    }
+
     public get course(): number {
         return Number(`0x${this.data[6]}`);
     }
 
     public set course(value: number) {
         let chars = [...this.data];
-        chars[6] = value.toString();
+        chars[6] = value.toString(16);
         this.data = chars.join("");
     }
 
     public get location(): number {
         return Number(`0x${this.data[7]}`);
+    }
+
+    public set location(value: number) {
+        let chars = [...this.data];
+        chars[7] = value.toString(16);
+        this.data = chars.join("");
     }
 
     public toNavData(index: number): NavigationData {
@@ -155,6 +185,88 @@ export const computerReducer = createReducer<ComputerState>(
         let secret = new HiddenState(state.echoMessages);
         let dest = secret.findNavDataByName(toLocation[action.course])
         secret.course = (secret.nav.indexOf(dest) ?? 0);
+        return {
+            echoMessages: JSON.stringify(secret)
+        }
+    }),
+    on(disengage, (state, action) => {
+        let secret = new HiddenState(state.echoMessages);
+        switch (action.system) {
+            case 'engines':
+                secret.engine = 0;
+                break;
+            case 'shields':
+                secret.shield = 0;
+                break;
+            case 'tractorbeam':
+                secret.tractor = false;
+                break;
+        }
+        return {
+            echoMessages: JSON.stringify(secret)
+        }
+    }),
+    on(slam, (state, action) => {
+        let secret = new HiddenState(state.echoMessages);
+        let systems: DirectObject[] = ['engines', 'shields', 'laser']
+        systems.forEach(sys => {
+            if (sys === action.system) {
+                switch (sys) {
+                    case 'engines':
+                        secret.engine = 10;
+                        break;
+                    case 'shields':
+                        secret.shield = 10;
+                        break;
+                    case 'laser':
+                        secret.laser = 10;
+                        break;
+                }
+            } else {
+                switch (sys) {
+                    case 'engines':
+                        secret.engine = 0;
+                        break;
+                    case 'shields':
+                        secret.shield = 0;
+                        break;
+                    case 'laser':
+                        secret.laser = 0;
+                        break;
+                }
+            }
+        });
+        return {
+            echoMessages: JSON.stringify(secret)
+        }
+    }),
+    on(slow, (state, action) => {
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        secret.engine = 1;
+        return {
+            echoMessages: JSON.stringify(secret)
+        }
+    }),
+    on(half, (state, action) => {
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        switch (action.system) {
+            case 'shields':
+                secret.shield = 5;
+                break;
+            case 'laser':
+                secret.laser = 5;
+                break;
+            case 'engines':
+                secret.engine = 5;
+                break;
+        }
+        return {
+            echoMessages: JSON.stringify(secret)
+        }
+    }),
+    on(toggleTractor, (state, action) => {
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        secret.tractor = !secret.tractor;
         return {
             echoMessages: JSON.stringify(secret)
         }

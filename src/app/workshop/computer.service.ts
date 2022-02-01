@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
 import { IComputerDirective } from "../challenge.service";
-import { echo, loadNavData, plotCourse, toggleDocking } from "./computer.actions";
+import { disengage, echo, half, loadNavData, plotCourse, slam, slow, toggleDocking, toggleTractor } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -37,33 +37,33 @@ export class ComputerService{
         directives.forEach(command => {
             if (command.directObject == 'docking clamp') {
                 this.store.dispatch(toggleDocking());
-                return;
+            }
+            if (command.directObject == 'tractorbeam') {
+                this.store.dispatch(toggleTractor());
             }
             if (command.verb == 'plot') {
                 this.store.dispatch(plotCourse({
                     course: command.adjectivalPhrase!
                 }));
-                return;
+            }
+            if (command.verb == 'disengage') {
+                this.store.dispatch(disengage({
+                    system: command.directObject
+                }));
+            }
+            if (command.verb == 'engage' && command.adverb! == 'fully') {
+                this.store.dispatch(slam({
+                    system: command.directObject
+                }));
+            }
+            if (command.verb == 'engage' && command.adverb! == 'slowly') {
+                this.store.dispatch(slow());
+            }
+            if (command.adverb == 'halfway') {
+                this.store.dispatch(half({
+                    system: command.directObject
+                }));
             }
         });
-    }
-
-    /**
-     * this is a helper method to turn a computer directive into a short string
-     *
-     * you can change this!
-     * @param d
-     * @returns
-     */
-    private directiveToMessage(d: IComputerDirective): string{
-        let result = "ACK > ";
-        if (d.adverb)
-            result += d.adverb.toUpperCase() + " ";
-        result += d.verb.toUpperCase();
-        result += ' THE ';
-        result += d.directObject.toUpperCase();
-        if (d.adjectivalPhrase)
-            result += " " + d.adjectivalPhrase.toUpperCase();
-        return result;
     }
 }
