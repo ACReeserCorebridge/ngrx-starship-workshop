@@ -17,17 +17,15 @@ export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
         //TODO: remove all the random state!
-        const locations: SolarSystemLocation[] = ['LEO', 'LunaOrbit', 'AsteroidBelt'];
-        const planets = ['/assets/mars.png', '/assets/SunRed.png', undefined];
-        const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined];
+        let nav = state.navData.find(x => x.location == state.expectation.course)
         const view: ViewscreenState = {
-            location: locations[Math.floor(Math.random() * 3)],
-            course: locations[Math.floor(Math.random() * 4)],
-            leftImage: satellites[Math.floor(Math.random() * 3)],
-            centerImage: planets[Math.floor(Math.random() * 3)],
-            rightImage: satellites[Math.floor(Math.random() * 3)],
-            laser: Math.random() > 0.5,
-            tractor: Math.random() > 0.5,
+            location: state.expectation.location || 'LEO',
+            course: state.expectation.course || 'LEO',
+            leftImage: (nav?.leftImage?.includes('satellite') && state.expectation.satelliteView == false) ? undefined : nav?.leftImage,
+            centerImage: (nav?.leftImage?.includes('asteroid') && state.expectation.asteroidView == false) ? undefined : nav?.centerImage,
+            rightImage: nav?.rightImage,
+            laser: state.expectation.laserView,
+            tractor: state.expectation.tractorView,
         };
         return view;
     }
@@ -37,7 +35,7 @@ export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
         //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.expectation.engine
     }
 );
 
@@ -45,7 +43,7 @@ export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
         //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
+        return state.expectation.laser
     }
 );
 
@@ -53,18 +51,24 @@ export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
         //TODO: remove all the random state!
-        return Math.random() > 0.5
+        return state.expectation.docking
     }
 );
 
 //TODO: finish up the shield selector!
-// export const selectShields = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectShields = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        //TODO: remove all the random state!
+        return state.expectation.shield
+    }
+);
 
 //TODO: finish up the tractorbeam selector!
-// export const selectTractorbeam = createSelector(
-//     ??,
-//     (??) => ??
-// );
+export const selectTractorbeam = createSelector(
+    selectComputer,
+    (state: ComputerState) => {
+        //TODO: remove all the random state!
+        return state.expectation.tractorbeam
+    }
+);

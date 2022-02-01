@@ -4,6 +4,7 @@
  * all action definitions go in this file
  */
 import { createAction, props } from "@ngrx/store";
+import { IComputerDirective, IExpectations } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
 
 /**
@@ -21,3 +22,15 @@ export const loadNavDataError = createAction('[computer] Load Navigation Data Er
 
 //TODO: add a lot more action definitions!
 // https://ngrx.io/guide/store/actions
+export const command = createAction(
+  '[computer] command',
+  props<{expectation: IExpectations, message: string}>()
+);
+export const plotCourse = createAction(
+  '[computer] plot course',
+  props<{directive: IComputerDirective, message: string}>()
+);
+export const disengageEngine = createAction(
+  '[computer] disengage engine',
+  props<{directive: IComputerDirective, message: string}>()
+);
