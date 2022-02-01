@@ -33,39 +33,39 @@ export const selectViewscreen = createSelector(
 export const selectShields = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages);
-        return Number(`0x${secret.data[0]}`);
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        return secret.shield;
     }
 );
 
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages);
-        return Number(`0x${secret.data[1]}`);
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        return secret.engine;
     }
 );
 
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages);
-        return Number(`0x${secret.data[2]}`);
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        return secret.laser;
     }
 );
 
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages);
-        return secret.data[3] === "1";
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        return secret.docking;
     }
 );
 
 export const selectTractorbeam = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages);
-        return secret.data[4] === "1";
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+        return secret.tractor;
     }
 );
