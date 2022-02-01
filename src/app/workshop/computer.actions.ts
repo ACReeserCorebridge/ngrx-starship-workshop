@@ -20,9 +20,13 @@ export const loadNavData = createAction('[computer] Load Navigation Data');
 export const loadNavDataSuccess = createAction('[computer] Load Navigation Data Success', props<{navs: NavigationData[]}>());
 export const loadNavDataError = createAction('[computer] Load Navigation Data Error');
 
-export const plotCourse = createAction('[computer] plot course', props<{location: SolarSystemLocation}>());
-export const adjustLasers = createAction('[computer] adjust lasers', props<{level: number}>());
-export const adjustEngines = createAction('[computer] adjust engines', props<{level: number}>());
-export const adjustDockingClamp = createAction('[computer] adjust docking clamp', props<{docking: boolean}>());
-export const adjustShields = createAction('[computer] adjust shields', props<{level: number}>());
-export const adjustTractorBeam = createAction('[computer] adjust tractor beam', props<{engaged: boolean}>());
+export interface StateUpdate {
+    course: SolarSystemLocation|undefined,
+    lasers: number|undefined,
+    engines: number|undefined,
+    docking: boolean|undefined,
+    shields: number|undefined,
+    tractorbeamEngaged: boolean|undefined
+}
+
+export const adjustState = createAction('[computer] adjust state', props<StateUpdate>());

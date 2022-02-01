@@ -17,30 +17,14 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let location: SolarSystemLocation = 'LEO';
-        let leftImage: string|undefined = undefined;
-        let centerImage: string|undefined = undefined;
-        let rightImage: string|undefined = undefined;
-
-        if (state.navigationData.length > 0) {
-            const navData = state.navigationData.find(x => x.location == state.location);
-
-            if (navData) {
-                location = state.location;
-                leftImage = navData.leftImage;
-                centerImage = navData.centerImage;
-                rightImage = navData.rightImage;
-            }
-        }
-
         const view: ViewscreenState = {
-            location: location,
+            location: state.location,
             course: state.course,
-            leftImage: leftImage,
-            centerImage: centerImage,
-            rightImage: rightImage,
-            laser: state.lasers > 0.5,
-            tractor: state.tractorbeamEngaged,
+            leftImage: state.navigationData[state.location]['leftImage'],
+            centerImage: state.navigationData[state.location]['centerImage'],
+            rightImage: state.navigationData[state.location]['rightImage'],
+            laser: state.engagedItem == 'lasers',
+            tractor: state.engagedItem == 'tractorbeam',
         };
         return view;
     }
@@ -56,27 +40,27 @@ export const selectEngine = createSelector(
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.lasers
+        return state.engagedItem == 'lasers' ? state.engagedItemValue : 0;
     }
 );
 
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.docked;
+        return state.engagedItem == 'docked';
     }
 );
 
 export const selectShields = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.shields;
+        return state.engagedItem == 'shields' ? state.engagedItemValue : 0;
     }
 );
 
 export const selectTractorbeam = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        return state.tractorbeamEngaged
+        return state.engagedItem == 'tractorbeam'
     }
 );

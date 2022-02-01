@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
-import { IComputerDirective, SolarSystemLocation } from "../challenge.service";
-import { adjustDockingClamp, adjustEngines, adjustLasers, adjustShields, adjustTractorBeam, echo, loadNavData, plotCourse } from "./computer.actions";
+import { IComputerDirective } from "../challenge.service";
+import { echo, loadNavData, StateUpdate, adjustState } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -25,110 +25,69 @@ export class ComputerService{
      * this is called when the captain commands the computer to do one or more things
      */
     public InterpretDirectives(directives: IComputerDirective[]) {
-        directives.forEach(x => 
-            {
+
+        let stateUpdate: StateUpdate = {
+            course: undefined,
+            docking: undefined,
+            engines: undefined,
+            lasers: undefined,
+            shields: undefined,
+            tractorbeamEngaged: undefined
+        };
+
+        directives.forEach(x => {
                 if (x.directObject == 'course') {
-                    let location: SolarSystemLocation = 'LEO';
-
                     if (x.adjectivalPhrase == 'to Luna orbit')
-                        location = 'LunaOrbit';
+                        stateUpdate.course = 'LunaOrbit';
                     else if (x.adjectivalPhrase == 'to the asteroid belt')
-                        location = 'AsteroidBelt';
-
-                    this.store.dispatch(
-                        plotCourse(
-                            {
-                                location: location
-                            }
-                        )
-                    );
-
+                        stateUpdate.course = 'AsteroidBelt';
+                    else if (x.adjectivalPhrase == 'to LEO')
+                        stateUpdate.course = 'LEO';
                 } else if (x.directObject == 'shields') {
-                    let level: number;
-
                     if (x.verb == 'disengage')
-                        level = 0;
+                        stateUpdate.shields = 0;
                     else if (x.adverb == 'halfway') 
-                        level = 5;
+                        stateUpdate.shields = 5;
                     else
-                        level = 10;
-
-                    this.store.dispatch(
-                        adjustShields(
-                            {
-                                level: level
-                            }
-                        )
-                    );
-
+                        stateUpdate.shields = 10;
                 } else if (x.directObject == 'engines') {
-                    let level: number = 0
-
                     if (x.verb == 'disengage')
-                        level = 0;
+                        stateUpdate.engines = 0;
                     else if (x.adverb == 'halfway') 
-                        level = 5;
+                        stateUpdate.engines = 5;
                     else if (x.adverb == 'slowly') 
-                        level = 1;
+                        stateUpdate.engines = 1;
                     else
-                        level = 10;
-
-                    this.store.dispatch(
-                        adjustEngines(
-                            {
-                                level: level
-                            }
-                        )
-                    );
-
+                        stateUpdate.engines = 10;
                 } else if (x.directObject == 'laser') {
-                    let level: number = 0
-
                     if (x.verb == 'disengage')
-                        level = 0;
+                        stateUpdate.lasers = 0;
                     else if (x.adverb == 'halfway') 
-                        level = 5;
+                        stateUpdate.lasers = 5;
                     else
-                        level = 10;
-
-                    this.store.dispatch(
-                        adjustLasers(
-                            {
-                                level: level
-                            }
-                        )
-                    );
-
+                        stateUpdate.lasers = 10;
                 } else if (x.directObject == 'tractorbeam') {
-                    this.store.dispatch(
-                        adjustTractorBeam(
-                            {
-                                engaged: (x.verb == 'engage')
-                            }
-                        )
-                    );
-
+                    stateUpdate.tractorbeamEngaged = (x.verb == 'engage');
                 } else if (x.directObject == 'docking clamp') {
-                    this.store.dispatch(
-                        adjustDockingClamp(
-                            {
-                                docking: (x.verb == 'engage')
-                            }
-                        )
-                    );
-
-                } else {
-                    this.store.dispatch(
-                        echo(
-                            {
-                                message: this.directiveToMessage(x)
-                            }
-                        )
-                    );
+                    stateUpdate.docking = (x.verb == 'engage');
                 }
-            }
+
+                /*
+                this.store.dispatch(
+                echo(
+                    {
+                        message: this.directiveToMessage(x)
+                    }
+                )
+                );
+                */
+        }
         );
-    }
+
+        this.store.dispatch(
+            adjustState(stateUpdate)
+        );
+}
 
     /**
      * this is a helper method to turn a computer directive into a short string
@@ -148,4 +107,4 @@ export class ComputerService{
             result += " " + d.adjectivalPhrase.toUpperCase();
         return result;
     }
-} 
+}

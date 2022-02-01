@@ -6,9 +6,10 @@
 import { act } from "@ngrx/effects";
 import { createReducer, on } from "@ngrx/store";
 import { SolarSystemLocation } from "../challenge.service";
-import { NavigationData } from "../nav-db.service";
-import { adjustDockingClamp, adjustEngines, adjustLasers, adjustShields, adjustTractorBeam, echo, loadNavDataError, loadNavDataSuccess, plotCourse } from "./computer.actions";
+import { adjustState, echo, loadNavDataSuccess } from "./computer.actions";
 
+type imageArray = { [index in string]: string|undefined};
+type locationArray = { [index in SolarSystemLocation]: imageArray };
 /**
  * This is the "slice" that you need to fill out!
  * 
@@ -26,27 +27,29 @@ export interface ComputerState{
      * 
      * feel free to change or remove this
      */
-    navigationData: NavigationData[];
+    navigationData: locationArray;
     echoMessages: string[];
-    tractorbeamEngaged: boolean;
-    shields: number;
-    docked: boolean;
     engines: number;
-    lasers: number;
     location: SolarSystemLocation;
     course: SolarSystemLocation|undefined;
+
+    engagedItem: 'none' | 'docked' | 'tractorbeam' | 'lasers' | 'shields';
+    engagedItemValue: number;
 }
 
 export const InitialComputerState: ComputerState = {
-    navigationData: [],
+    navigationData: {
+        AsteroidBelt: {},
+        LEO: {},
+        LunaOrbit: {},
+    },
     echoMessages: [],
-    tractorbeamEngaged: false,
-    shields: 0,
-    docked: false,
     engines: 0,
-    lasers: 0,
     location: 'LEO',
-    course: undefined
+    course: undefined,
+
+    engagedItem: 'none',
+    engagedItemValue: 0,
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -62,119 +65,136 @@ export const computerReducer = createReducer<ComputerState>(
     }),
 
     on(loadNavDataSuccess, (state, action) => {
+        const leo = action.navs.find(x => x.location == 'LEO');
+        let leoNavData: imageArray = {}; 
+        if (leo?.leftImage) {
+            leoNavData['leftImage'] = leo.leftImage;
+        }
+        if (leo?.centerImage) {
+            leoNavData['centerImage'] = leo.centerImage;
+        }
+        if (leo?.rightImage) {
+            leoNavData['rightImage'] = leo.rightImage;
+        }
+
+        const lunaorbit = action.navs.find(x => x.location == 'LunaOrbit');
+        let lunaorbitNavData: imageArray = {}; 
+        if (lunaorbit?.leftImage) {
+            lunaorbitNavData['leftImage'] = lunaorbit.leftImage;
+        }
+        if (lunaorbit?.centerImage) {
+            lunaorbitNavData['centerImage'] = lunaorbit.centerImage;
+        }
+        if (lunaorbit?.rightImage) {
+            lunaorbitNavData['rightImage'] = lunaorbit.rightImage;
+        }
+
+        const asteroidbelt = action.navs.find(x => x.location == 'AsteroidBelt');
+        let asteroidbeltNavData: imageArray = {}; 
+        if (asteroidbelt?.leftImage) {
+            asteroidbeltNavData['leftImage'] = asteroidbelt.leftImage;
+        }
+        if (asteroidbelt?.centerImage) {
+            asteroidbeltNavData['centerImage'] = asteroidbelt.centerImage;
+        }
+        if (asteroidbelt?.rightImage) {
+            asteroidbeltNavData['rightImage'] = asteroidbelt.rightImage;
+        }
+
         return {
             ...state,
-            navigationData: action.navs
+            navigationData: {
+                LEO: leoNavData,
+                LunaOrbit: lunaorbitNavData,
+                AsteroidBelt: asteroidbeltNavData
+            }
         }
     }),
+
+    on(adjustState, (state, action) => {
+        let newState = {...state};
+        let navData = {...state.navigationData};
+
+        if (action.lasers != undefined) {
+            if (action.lasers > 0.5) {
+                let leftImage = navData[state.location]['leftImage'];
+                if (leftImage?.includes("asteroid")) {
+                    delete navData[state.location]['leftImage'];
+                }
     
-    on(adjustEngines, (state, action) => {
-        let course = state.course;
-        let location = state.location;
+                let centerImage = navData[state.location]['centerImage'];
+                if (centerImage?.includes("asteroid")) {
+                    delete navData[state.location]['centerImage'];
+                }
+    
+                let rightImage = navData[state.location]['rightImage'];
+                if (rightImage?.includes("asteroid")) {
+                    delete navData[state.location]['rightImage'];
+                }
+            }
 
-        if (course) {
-            location = course;
-            if (action.level == 0) 
-                course = undefined;
+            newState.engagedItem = 'lasers';
+            newState.engagedItemValue = action.lasers;
+    
+        } else {
+            newState.engagedItem = 'none';
+            newState.engagedItemValue = 0;
         }
 
-        return {
-            ...state,
-            engines : action.level,
-            lasers: 0,
-            location: location,
-            course: course
+        if (action.course != undefined) {
+            newState.course = action.course;
         }
-    }),
 
-    on(adjustLasers, (state, action) => {
-        let navData = [...state.navigationData];
+        if (action.engines != undefined) {
+            let course = newState.course;
+            let location = state.location;
+    
+            if (course) {
+                location = course;
+                if (action.engines == 0) 
+                    course = undefined;
+            }
 
-        if (action.level > 0.5) {
-            const index = navData.findIndex(x => x.location == state.location);
-            let leftImage = navData[index].leftImage;
-            if (leftImage?.includes("asteroid"))
-                leftImage = undefined;
+            newState.engines = action.engines;
+            newState.location = location,
+            newState.course = course            
+        }
 
-            let centerImage = navData[index].centerImage;
-            if (centerImage?.includes("asteroid"))
-                centerImage = undefined;
+        if (action.docking) {
+            newState.engagedItem = 'docked';
+        }
 
-            let rightImage = navData[index].rightImage;
-            if (rightImage?.includes("asteroid"))
-                rightImage = undefined;
+        if (action.shields != undefined) {
+            newState.engagedItem = 'shields';
+            newState.engagedItemValue = action.shields;
+        }
 
-            navData[index] = 
-            {
-                location: state.location,
-                leftImage: leftImage,
-                centerImage: centerImage,
-                rightImage: rightImage
+        if (action.tractorbeamEngaged != undefined) {
+            if (!action.tractorbeamEngaged) {
+                let leftImage = navData[state.location]['leftImage'];
+                if (leftImage?.includes("satellite")) {
+                    delete navData[state.location]['leftImage'];
+                }
+    
+                let centerImage = navData[state.location]['centerImage'];
+                if (centerImage?.includes("satellite")) {
+                    delete navData[state.location]['centerImage'];
+                }
+    
+                let rightImage = navData[state.location]['rightImage'];
+                if (rightImage?.includes("satellite")) {
+                    delete navData[state.location]['rightImage'];
+                }
+            }
+
+            if (action.tractorbeamEngaged) {
+                newState.engagedItem = 'tractorbeam';
             }
         }
 
         return {
-            ...state,
-            navigationData: navData,
-            lasers : action.level
-        }
-    }),
-
-    on(plotCourse, (state, action) => {
-        return {
-            ...state,
-            course : action.location,
-            lasers: 0
-        }
-    }),
-
-    on(adjustDockingClamp, (state, action) => {
-        return {
-            ...state,
-            docked : action.docking,
-            lasers: 0
-        }
-    }),
-
-    on(adjustShields, (state, action) => {
-        return {
-            ...state,
-            shields: action.level,
-            lasers: 0
-        };
-    }),
-
-    on(adjustTractorBeam, (state, action) => {
-        let navData = [...state.navigationData];
-
-        if (!action.engaged) {
-            const index = navData.findIndex(x => x.location == state.location);
-            let leftImage = navData[index].leftImage;
-            if (leftImage?.includes("satellite"))
-                leftImage = undefined;
-
-            let centerImage = navData[index].centerImage;
-            if (centerImage?.includes("satellite"))
-                centerImage = undefined;
-
-            let rightImage = navData[index].rightImage;
-            if (rightImage?.includes("satellite"))
-                rightImage = undefined;
-
-            navData[index] = 
-            {
-                location: state.location,
-                leftImage: leftImage,
-                centerImage: centerImage,
-                rightImage: rightImage
-            }
-        }
-
-        return {
-            ...state,
-            navigationData: navData,
-            tractorbeamEngaged: action.engaged,
-            lasers: 0
+            ...newState,
+            navigationData: navData
         };
     }),
 );
