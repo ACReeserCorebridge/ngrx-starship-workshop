@@ -4,6 +4,7 @@
  * all action definitions go in this file
  */
 import { createAction, props } from "@ngrx/store";
+import { SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
 
 /**
@@ -19,5 +20,13 @@ export const loadNavData = createAction('[computer] Load Navigation Data');
 export const loadNavDataSuccess = createAction('[computer] Load Navigation Data Success', props<{navs: NavigationData[]}>());
 export const loadNavDataError = createAction('[computer] Load Navigation Data Error');
 
-//TODO: add a lot more action definitions!
-// https://ngrx.io/guide/store/actions
+export interface StateUpdate {
+    course: SolarSystemLocation|undefined,
+    lasers: number|undefined,
+    engines: number|undefined,
+    docking: boolean|undefined,
+    shields: number|undefined,
+    tractorbeamEngaged: boolean|undefined
+}
+
+export const adjustState = createAction('[computer] adjust state', props<StateUpdate>());
