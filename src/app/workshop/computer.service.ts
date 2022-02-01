@@ -37,32 +37,39 @@ export class ComputerService{
         directives.forEach(command => {
             if (command.directObject == 'docking clamp') {
                 this.store.dispatch(toggleDocking());
+                return;
             }
             if (command.directObject == 'tractorbeam') {
                 this.store.dispatch(toggleTractor());
+                return;
             }
             if (command.verb == 'plot') {
                 this.store.dispatch(plotCourse({
                     course: command.adjectivalPhrase!
                 }));
+                return;
             }
             if (command.verb == 'disengage') {
                 this.store.dispatch(disengage({
                     system: command.directObject
                 }));
+                return;
             }
             if (command.verb == 'engage' && command.adverb! == 'fully') {
                 this.store.dispatch(slam({
                     system: command.directObject
                 }));
+                return;
             }
             if (command.verb == 'engage' && command.adverb! == 'slowly') {
                 this.store.dispatch(slow());
+                return;
             }
             if (command.adverb == 'halfway') {
                 this.store.dispatch(half({
                     system: command.directObject
                 }));
+                return;
             }
         });
     }

@@ -85,6 +85,9 @@ export class HiddenState {
     public set tractor(value: boolean) {
         let chars = [...this.data];
         chars[4] = value ? '1' : '0';
+        if (!value) {
+            this.nav[1].leftImage = undefined;
+        }
         this.data = chars.join("");
     }
 
@@ -214,6 +217,9 @@ export const computerReducer = createReducer<ComputerState>(
                 switch (sys) {
                     case 'engines':
                         secret.engine = 10;
+                        if (secret.location != secret.course) {
+                            secret.location = secret.course;
+                        }
                         break;
                     case 'shields':
                         secret.shield = 10;
@@ -255,9 +261,15 @@ export const computerReducer = createReducer<ComputerState>(
                 break;
             case 'laser':
                 secret.laser = 5;
+                if (secret.location == 2) {
+                    secret.nav[2].centerImage = "./assets/explosion_big.gif";
+                }
                 break;
             case 'engines':
                 secret.engine = 5;
+                if (secret.location != secret.course) {
+                    secret.location = secret.course;
+                }
                 break;
         }
         return {
