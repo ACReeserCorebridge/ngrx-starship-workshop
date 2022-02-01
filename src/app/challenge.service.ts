@@ -94,7 +94,7 @@ export class ChallengeService{
             transcription: "It's impolite to leave plasma thruster burns on your docking port."
         },
         {
-            transcription: "COMPUTER, plot a to Luna orbit, then fully engage the engines.",
+            transcription: "COMPUTER, plot a course to Luna orbit, then fully engage the engines.",
             computerDirective: [{
                 verb: 'plot',
                 directObject: 'course',

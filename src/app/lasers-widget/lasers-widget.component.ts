@@ -16,19 +16,19 @@ export class LasersWidgetComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  
   percent$ = this.store.select(selectLasers).pipe(
-      //DO NOT change the tap and share operators below
-      tap((laserPowerAmount: number) => 
-      { 
-        this.snitch.OnVisualChange({laser: laserPowerAmount})
-      }),
-      share()
+    //DO NOT change the tap and share operators below
+    tap((laserPowerAmount: number) => 
+    { 
+      this.snitch.OnVisualChange({laser: laserPowerAmount})
+    }),
+    share()
   );
   percentClass$ = this.percent$.pipe(
-      map(y => "percent-"+y)
+    map(y => "percent-"+y)
   );
   percentStr$ = this.percent$.pipe(
-      map(z => (z*10)+'%')
+    map(z => (z*10)+'%')
   );
 }
