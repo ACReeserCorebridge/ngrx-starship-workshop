@@ -17,21 +17,12 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 export const selectViewscreen = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages[0]);
-        const locations: SolarSystemLocation[] = ['LEO', 'LunaOrbit', 'AsteroidBelt'];
-        let curr: NavigationData = {
-            location: 'LEO',
-            leftImage: undefined,
-            centerImage: undefined,
-            rightImage: undefined
-        } as NavigationData;
-        if (secret.nav) {
-            let index = Number(`0x${secret.data[7]}`);
-            curr = secret.nav.find(x => x.location == locations[index])!;
-        }
+        let secret: HiddenState = new HiddenState(state.echoMessages);
+
+        let curr: NavigationData = secret.toNavData(secret.location);
         const view: ViewscreenState = {
             ...curr,
-            course: locations[Number(`0x${secret.data[6]}`)],
+            course: secret.toNavData(secret.course).location,
             laser: Number(`0x${secret.data[2]}`) >= 5,
             tractor: secret.data[4] === "1",
         };
@@ -42,7 +33,7 @@ export const selectViewscreen = createSelector(
 export const selectShields = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages[0]);
+        let secret: HiddenState = JSON.parse(state.echoMessages);
         return Number(`0x${secret.data[0]}`);
     }
 );
@@ -50,7 +41,7 @@ export const selectShields = createSelector(
 export const selectEngine = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages[0]);
+        let secret: HiddenState = JSON.parse(state.echoMessages);
         return Number(`0x${secret.data[1]}`);
     }
 );
@@ -58,7 +49,7 @@ export const selectEngine = createSelector(
 export const selectLasers = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages[0]);
+        let secret: HiddenState = JSON.parse(state.echoMessages);
         return Number(`0x${secret.data[2]}`);
     }
 );
@@ -66,7 +57,7 @@ export const selectLasers = createSelector(
 export const selectDockingClamp = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages[0]);
+        let secret: HiddenState = JSON.parse(state.echoMessages);
         return secret.data[3] === "1";
     }
 );
@@ -74,7 +65,7 @@ export const selectDockingClamp = createSelector(
 export const selectTractorbeam = createSelector(
     selectComputer,
     (state: ComputerState) => {
-        let secret: HiddenState = JSON.parse(state.echoMessages[0]);
+        let secret: HiddenState = JSON.parse(state.echoMessages);
         return secret.data[4] === "1";
     }
 );

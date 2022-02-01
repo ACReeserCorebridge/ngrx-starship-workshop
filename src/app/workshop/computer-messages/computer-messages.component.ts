@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { delay } from 'rxjs';
 import { AppState } from '../../app.state';
+import {v4 as uuidv4} from 'uuid';
 
 @Component({
   selector: 'app-computer-messages',
@@ -34,7 +35,7 @@ export class ComputerMessagesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public chat$ = this.store.select(x => x.computer.echoMessages).pipe(
+  public chat$ = this.store.select(x => [...Array(8)].map(e => uuidv4())).pipe(
     delay(660)
   );
 }
