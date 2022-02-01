@@ -30,16 +30,16 @@ export class ComputerService {
      */
     public InterpretDirectives(directives: IComputerDirective[]) {
         //TODO: decide which actions to dispatch based on the directives passed in!
-        directives.forEach(x => {
-            switch(x.directObject) {
-                case 'shields' :  this.store.dispatch(shields({ directive: x })); break;
-                case 'engines' :  this.store.dispatch(engines({ directive: x })); break;
-                case 'laser' : this.store.dispatch(laserPower({ directive: x })); break;
-                case 'tractorbeam' : this.store.dispatch(tractorbeam({ directive: x })); break;
-                case 'docking clamp' : this.store.dispatch(dockingClamp({ directive: x })); break;
-                case 'course' : this.store.dispatch(plotCourse({ directive: x })); break;
+        directives.forEach(directive => {
+            switch(directive.directObject) {
+                case 'docking clamp' : this.store.dispatch(dockingClamp({ directive })); break;
+                case 'shields' :  this.store.dispatch(shields({ directive })); break;
+                case 'engines' :  this.store.dispatch(engines({ directive })); break;
+                case 'laser' : this.store.dispatch(laserPower({ directive })); break;
+                case 'tractorbeam' : this.store.dispatch(tractorbeam({ directive })); break;
+                case 'course' : this.store.dispatch(plotCourse({ directive })); break;
             }
-            this.store.dispatch(echo({ message: this.directiveToMessage(x) }));
+            this.store.dispatch(echo({ message: this.directiveToMessage(directive) }));
         });
     }
 
@@ -63,7 +63,7 @@ export class ComputerService {
     }
 } 
 
-/** Added Conditions for Computer Directives */
+/** Added Conditions for Computer Directives to be used in Reducer */
 
 export function processComputerDirectives(directive: IComputerDirective)  {
     let processDirective: any = undefined;
@@ -71,6 +71,7 @@ export function processComputerDirectives(directive: IComputerDirective)  {
         switch(directive.adverb) {
             case 'fully':  processDirective = MAX_AMT_POWER; break;
             case 'halfway': processDirective = MAX_AMT_POWER / 2; break;
+            case 'slowly': processDirective = MIN_AMT_POWER; break;
             default: processDirective = MIN_AMT_POWER;  /** Default Slowly */
         }
     }
