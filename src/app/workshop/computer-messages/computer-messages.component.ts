@@ -1,8 +1,8 @@
 /**
  * this is a completely customizable component
- * 
+ *
  * initially, it just echoes english grammar the captain says
- * 
+ *
  * feel free to change anything it does
  */
 import { animate, style, transition, trigger } from '@angular/animations';
