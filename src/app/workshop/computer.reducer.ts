@@ -5,7 +5,8 @@
  */
 import { createReducer, on } from "@ngrx/store";
 import { NavigationData } from "../nav-db.service";
-import { echo, loadNavDataSuccess } from "./computer.actions";
+import { SolarSystemLocation } from "../challenge.service"; 
+import { echo, loadNavDataSuccess, toggleTractorBeam, toggleDocking, toggleLaser, selectEngine, toggleShield} from "./computer.actions";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -16,21 +17,29 @@ import { echo, loadNavDataSuccess } from "./computer.actions";
  * All of the visual components will select their state from this central
  * state location.
  */
-export interface ComputerState{
-    /**
-     * these messages are displayed by the computer-messages component
-     * 
-     * they are not required or useful, they are just example of state properties
-     * 
-     * feel free to change or remove this
-     */
-    echoMessages: string[]
-    //TODO: add a lot more state!
+export interface ComputerState {
+    echoMessages: string[],
+    enableTractorBeam: boolean,
+    shieldPercentage: number
+    navigationData: NavigationData[],
+    enableDocking: boolean,
+    laserPercentage: number,
+    enginePercentage: number
 }
 
 export const InitialComputerState: ComputerState = {
-    echoMessages: []
-    //TODO: add additional initial state!
+    echoMessages: [],
+    navigationData: [{
+        location: 'LEO',
+        leftImage: '/assets/satellite.png',
+        centerImage: '/assets/planet.png',
+        rightImage: '/assets/spaceStation.png'
+    }],
+    enableTractorBeam: false,
+    shieldPercentage: 0,
+    enableDocking: false,
+    laserPercentage: 0,
+    enginePercentage: 0,
 }
 
 export const computerReducer = createReducer<ComputerState>(
@@ -44,11 +53,42 @@ export const computerReducer = createReducer<ComputerState>(
             ]
         };
     }),
-    //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
-    //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
-    //TODO: add a lot more reducer action logic!
-    // https://ngrx.io/guide/store/reducers
-    // there should be a lot of logic in here!
+    on(toggleTractorBeam, (state, action) => {
+        return {
+            ...state,
+            enableTractorBeam: action.status
+        };
+    }),
+    on(toggleShield, (state, action) => {
+        return {
+            ...state,
+            shieldPercentage: action.percentage
+        };
+    }),
+    on(loadNavDataSuccess, (state, action) => {
+        return {
+            ...state,
+            navigationData: action.navs
+        };
+    }),
+    on(toggleDocking, (state, action) => {
+        return {
+            ...state,
+            enableDocking: action.status
+        };
+    }),
+    on(toggleLaser, (state, action) => {
+        return {
+            ...state,
+            laserPercentage: action.percentage
+        };
+    }),
+    on(selectEngine, (state, action) => {
+        return {
+            ...state,
+            enginePercentage: action.percentage
+        };
+    }),
 );
 
  
