@@ -11,16 +11,20 @@
 .paint .planetoid
     margin: auto
     display: block
+    z-index: 10000
+    position: relative
 
 .paint .satellite
     position: absolute
     width: 140px
 
 .satellite.left
+    z-index: 10001
     left: 20px
     top: 30px
 
 .satellite.right
+    z-index: 10001
     right: 20px
     top: 30px
 
@@ -32,12 +36,15 @@ app-starfield
 .course
     font-size: 11px
     margin-left: 10px
+    position: relative
+    display: inline-block
 
 img.effect
     position: absolute
     left: calc(50% - 80px)
     width: 160px
     bottom: -10px
+    z-index: 10001
     filter: sepia(1) hue-rotate(313deg) saturate(2)
     &.tractor
         left: 10px

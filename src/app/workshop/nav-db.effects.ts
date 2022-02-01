@@ -1,23 +1,33 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { switchMap, map, catchError, of } from "rxjs";
-import { NavDBService, NavigationData } from "../nav-db.service";
-import { loadNavData, loadNavDataError, loadNavDataSuccess } from "./computer.actions";
+import { NavDBService } from "../nav-db.service";
+import { loadNavData, loadNavDataError, loadNavDataSuccess, beforePlot, plot } from "./computer.actions";
 
 @Injectable()
-export class NavDBEffects{
+export class NavDBEffects {
     constructor(
-      private actions$: Actions,
-      private service: NavDBService
-    ){}
+        private actions$: Actions,
+        private service: NavDBService
+    ) { }
 
-    //TODO: make the effect work!
-    // https://ngrx.io/guide/effects/operators is a good reference
-    // loadNavigationData$ = createEffect(() =>
-    //TODO: do something with this.actions$
-    //TODO: do something with loadNavData
-    //TODO: do something with this.service.getNavigationData()
-    //TODO: do something with loadNavDataSuccess
-    //TODO: do something with loadNavDataError
-    // );
+    loadNavigationData$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(loadNavData),
+            switchMap(action => this.service.getNavigationData().pipe(
+                map(navs => loadNavDataSuccess({ navs: navs.filter(a => a.location === 'LEO')[0] }),
+                catchError(error => of(loadNavDataError())))
+            ))
+        )
+    );
+
+    beforePlot$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(beforePlot),
+            switchMap(action => this.service.getNavigationData().pipe(
+                map(navs => plot({ currentLocation: navs.filter(a => a.location === action.course)[0] }),
+                catchError(error => of(loadNavDataError())))
+            ))
+        )
+    );
 }
