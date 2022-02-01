@@ -19,8 +19,8 @@ export const selectViewscreen = createSelector(
         //TODO: remove all the random state!
         let nav = state.navData.find(x => x.location == state.expectation.course)
         const view: ViewscreenState = {
-            location: state.expectation.location || 'LEO',
-            course: state.expectation.course || 'LEO',
+            location: state.expectation.location,
+            course: state.expectation.course,
             leftImage: (nav?.leftImage?.includes('satellite') && state.expectation.satelliteView == false) ? undefined : nav?.leftImage,
             centerImage: (nav?.leftImage?.includes('asteroid') && state.expectation.asteroidView == false) ? undefined : nav?.centerImage,
             rightImage: nav?.rightImage,
