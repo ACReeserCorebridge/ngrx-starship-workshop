@@ -19,8 +19,7 @@ export class LasersWidgetComponent implements OnInit {
   
   percent$ = this.store.select(selectLasers).pipe(
     //DO NOT change the tap and share operators below
-    tap((laserPowerAmount: number) => 
-    { 
+    tap((laserPowerAmount: number) => { 
       this.snitch.OnVisualChange({laser: laserPowerAmount})
     }),
     share()
@@ -31,4 +30,5 @@ export class LasersWidgetComponent implements OnInit {
   percentStr$ = this.percent$.pipe(
     map(z => (z*10)+'%')
   );
+  
 }
