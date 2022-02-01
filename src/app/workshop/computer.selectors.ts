@@ -1,70 +1,97 @@
 /**
  * computer selector file!
- * 
+ *
  * all main computer selectors go in this file
- * 
+ *
  * this file should be free of any business logic or Math.random() calls!
  */
 import { createSelector } from "@ngrx/store";
 import { selectComputer } from "../app.state";
-import { SolarSystemLocation } from "../challenge.service";
+import { NavigationData } from "../nav-db.service";
 import { ComputerState } from "./computer.reducer";
 import { ViewscreenState } from "./viewscreen/viewscreen.component";
 
 // https://ngrx.io/guide/store/selectors
 
+
+export const selectCurrentNavLocationData = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.navs.find(nav => nav.location == state.location)
+  }
+);
+
+export const selectCurrentNavCourseData = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.navs.find(nav => nav.location == state.course)
+  }
+);
+
+export const selectLaserView = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.laser > 0;
+  }
+);
+
+export const selectEngine = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.engine
+  }
+);
+
+export const selectShield = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.shield;
+  }
+)
+
+export const selectLasers = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.laser;
+  }
+);
+
+export const selectDockingClamp = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.docking
+  }
+);
+
+export const selectTractorBeam = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.tractorbeam
+  }
+);
+
+export const selectCourse = createSelector(
+  selectComputer,
+  (state: ComputerState) => {
+    return state.course
+  }
+);
+
 export const selectViewscreen = createSelector(
     selectComputer,
-    (state: ComputerState) => {
-        //TODO: remove all the random state!
-        const locations: SolarSystemLocation[] = ['LEO', 'LunaOrbit', 'AsteroidBelt'];
-        const planets = ['/assets/mars.png', '/assets/SunRed.png', undefined];
-        const satellites = ['/assets/red_asteroid.png', '/assets/yellow_satellite.png', undefined];
+    selectCurrentNavLocationData,
+    selectCurrentNavCourseData,
+    selectLaserView,
+    (state: ComputerState, currentNavLocation: NavigationData | undefined, currentNavCourse: NavigationData | undefined, laserView: boolean) => {
         const view: ViewscreenState = {
-            location: locations[Math.floor(Math.random() * 3)],
-            course: locations[Math.floor(Math.random() * 4)],
-            leftImage: satellites[Math.floor(Math.random() * 3)],
-            centerImage: planets[Math.floor(Math.random() * 3)],
-            rightImage: satellites[Math.floor(Math.random() * 3)],
-            laser: Math.random() > 0.5,
-            tractor: Math.random() > 0.5,
+            location: state.location,
+            course: state.course,
+            leftImage: state.leftImage,
+            centerImage: state.centerImage,
+            rightImage: currentNavCourse?.rightImage,
+            laser: laserView,
+            tractor: state.tractorbeam
         };
         return view;
     }
 );
-
-export const selectEngine = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
-    }
-);
-
-export const selectLasers = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.floor(Math.random()*11)
-    }
-);
-
-export const selectDockingClamp = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-        //TODO: remove all the random state!
-        return Math.random() > 0.5
-    }
-);
-
-//TODO: finish up the shield selector!
-// export const selectShields = createSelector(
-//     ??,
-//     (??) => ??
-// );
-
-//TODO: finish up the tractorbeam selector!
-// export const selectTractorbeam = createSelector(
-//     ??,
-//     (??) => ??
-// );
