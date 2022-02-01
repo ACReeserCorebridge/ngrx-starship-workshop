@@ -20,7 +20,7 @@ export class HiddenState {
      *
      *                     REFERENCE GUIDE
      * shield engine laser docking tractor course location
-     * 0      1      2     3       4       6      7
+     * 0      1      2     3       4       5      6
      * 0x     0x     0x    0b      0b      0x     0x
      */
     data: string = "0001000";
