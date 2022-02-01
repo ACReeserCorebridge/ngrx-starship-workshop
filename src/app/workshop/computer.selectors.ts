@@ -23,8 +23,8 @@ export const selectViewscreen = createSelector(
         const view: ViewscreenState = {
             ...curr,
             course: secret.toNavData(secret.course).location,
-            laser: Number(`0x${secret.data[2]}`) >= 5,
-            tractor: secret.data[4] === "1",
+            laser: secret.laser >= 5,
+            tractor: secret.tractor,
         };
         return view;
     }
