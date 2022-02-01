@@ -79,18 +79,17 @@ export class ComputerService{
             let verbToBoolean: boolean = false;
             if(x.verb){
                 switch(x.verb) {
-                    case 'engage':
-                        verbToNum = 10;
-                        verbToBoolean = true;
+                    case 'disengage':
+                        verbToNum = 0;
+                        verbToBoolean = false;
                         break;
                     case 'plot':
                         verbToNum = 10;
                         verbToBoolean = true;
                         break;
-                    case 'disengage':
+                    case 'engage':
                         verbToNum = 10;
                         verbToBoolean = true;
-                        navData[0].leftImage = undefined; //satelite view should always be false when disengaged
                         break;
                     default:
                         return;
@@ -128,18 +127,39 @@ export class ComputerService{
                 switch(x.directObject) {
                     case 'shields':
                         this.store.dispatch(toggleShield({percentage: verbToNum}));
+                        if(x.adverb == 'fully') { //need to disable laser when shield is full
+                            this.store.dispatch(toggleLaser({percentage: 0}));
+                        }
+                        break;
+                    case 'docking clamp':
+                        this.store.dispatch(toggleDocking({status: verbToBoolean}));
                         break;
                     case 'engines':
                         this.store.dispatch(selectEngine({percentage: verbToNum}));
                         break;
                     case 'laser':
                         this.store.dispatch(toggleLaser({percentage: verbToNum}));
-                        break;
-                    case 'docking clamp':
-                        this.store.dispatch(toggleDocking({status: verbToBoolean}));
+                        if(x.adverb == 'halfway'){
+                            navData = [{
+                                location: 'AsteroidBelt',
+                                leftImage: '/assets/asteroid.png',
+                                centerImage: undefined,
+                                rightImage: '/assets/asteroid.png',
+                            }];
+                            this.store.dispatch(loadNavDataSuccess({navs: navData}));
+                        }
                         break;
                     case 'tractorbeam':
                         this.store.dispatch(toggleTractorBeam({status: verbToBoolean}));
+                        if(x.verb == 'disengage'){
+                            navData = [{
+                                location: 'LunaOrbit',
+                                leftImage: undefined,
+                                centerImage: '/assets/luna.png',
+                                rightImage: undefined,
+                            }];
+                            this.store.dispatch(loadNavDataSuccess({navs: navData}));
+                        }
                         break;
                     case 'course':
                         this.store.dispatch(loadNavDataSuccess({navs: navData}));

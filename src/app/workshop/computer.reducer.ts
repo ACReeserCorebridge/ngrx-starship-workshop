@@ -74,7 +74,7 @@ export const computerReducer = createReducer<ComputerState>(
     on(toggleDocking, (state, action) => {
         return {
             ...state,
-            enableTractorBeam: action.status
+            enableDocking: action.status
         };
     }),
     on(toggleLaser, (state, action) => {
