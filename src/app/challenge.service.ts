@@ -1,7 +1,7 @@
 /**
  * DO NOT modify this file!
- *
- * This file
+ * 
+ * This file 
  * 1. specifies the challenge code
  * 2. issues directives to the computer service
  * 3. listens for VISUAL changes to state
@@ -28,19 +28,19 @@ export interface IComputerDirective {
 export interface IExpectations {
     /**
      * the amount of power to the shield.
-     *
+     * 
      * Must be from 0-10
      */
     shield?:number,
     /**
      * the amount of power to the engine.
-     *
+     * 
      * Must be from 0-10
      */
     engine?:number,
     /**
      * the amount of power to the laser.
-     *
+     * 
      * Must be from 0-10
      */
     laser?:number,
@@ -68,7 +68,7 @@ const TickRateMS = 3000;
 export class ChallengeService{
     /**
      * DO NOT modify this array! This is the test!
-     *
+     * 
      * you SHOULD use it for reference!
      */
     private commands: IVoiceEvent[] = [
@@ -94,8 +94,7 @@ export class ChallengeService{
             transcription: "It's impolite to leave plasma thruster burns on your docking port."
         },
         {
-            transcription: "COMPUTER, plot a " +
-              " to Luna orbit, then fully engage the engines.",
+            transcription: "COMPUTER, plot a to Luna orbit, then fully engage the engines.",
             computerDirective: [{
                 verb: 'plot',
                 directObject: 'course',
