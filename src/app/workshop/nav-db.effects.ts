@@ -20,4 +20,17 @@ export class NavDBEffects{
     //TODO: do something with loadNavDataSuccess
     //TODO: do something with loadNavDataError
     // );
+
+    loadNavigationData$ = createEffect(() => {
+      return this.actions$.pipe(
+        ofType(loadNavData),
+        switchMap(action => {
+          return this.service.getNavigationData()
+            .pipe(
+              map((data: NavigationData[]) => loadNavDataSuccess({navs: data})),
+              catchError(() => of(loadNavDataError()))
+            )
+        })
+      );
+    });
 }

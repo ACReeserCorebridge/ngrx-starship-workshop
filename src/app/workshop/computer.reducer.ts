@@ -3,9 +3,11 @@
  * 
  * all main computer logic should go in this file
  */
+import { state } from "@angular/animations";
 import { createReducer, on } from "@ngrx/store";
+import { SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
-import { echo, loadNavDataSuccess } from "./computer.actions";
+import { echo, engageEngines, engageLasers, engageShields, engageTractorBeam, loadNavDataSuccess, plotCourse } from "./computer.actions";
 
 /**
  * This is the "slice" that you need to fill out!
@@ -24,12 +26,24 @@ export interface ComputerState{
      * 
      * feel free to change or remove this
      */
-    echoMessages: string[]
+    echoMessages: string[],
+    engine: number,
+    course: SolarSystemLocation,
+    tractorbeam: boolean,
+    shield: number,
+    laser: number,
+    navs: NavigationData[],
     //TODO: add a lot more state!
 }
 
 export const InitialComputerState: ComputerState = {
-    echoMessages: []
+    echoMessages: [],
+    engine: 1,
+    shield: 0,
+    laser: 0,
+    course: 'LEO',
+    tractorbeam: true,
+    navs: []
     //TODO: add additional initial state!
 }
 
@@ -44,6 +58,31 @@ export const computerReducer = createReducer<ComputerState>(
             ]
         };
     }),
+    on(loadNavDataSuccess, (state, action) => ({
+        ...state,
+        navs: action.navs
+    })),
+    on(engageEngines, (state, action) => ({
+        ...state,
+        engine: action.engine,
+    })),
+    on(plotCourse, (state, action) => ({
+        ...state,
+        course: action.course,
+    })),
+    on(engageTractorBeam, (state, action) => ({
+        ...state,
+        tractorbeam: action.tractorbeam,
+    })),
+    on(engageShields, (state, action) => ({
+        ...state,
+        shield: action.shield,
+        laser: action.shield === 10 ? 0 : state.laser
+    })),
+    on(engageLasers, (state, action) => ({
+        ...state,
+        laser: action.laser,
+    })),
     //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
     //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
     //TODO: add a lot more reducer action logic!

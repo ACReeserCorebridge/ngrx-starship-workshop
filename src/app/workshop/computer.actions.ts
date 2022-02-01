@@ -4,6 +4,7 @@
  * all action definitions go in this file
  */
 import { createAction, props } from "@ngrx/store";
+import { SolarSystemLocation } from "../challenge.service";
 import { NavigationData } from "../nav-db.service";
 
 /**
@@ -21,3 +22,8 @@ export const loadNavDataError = createAction('[computer] Load Navigation Data Er
 
 //TODO: add a lot more action definitions!
 // https://ngrx.io/guide/store/actions
+export const engageEngines = createAction('[engines] Engage Engines', props<{engine: number}>());
+export const plotCourse = createAction('[course] Plot Course', props<{course: SolarSystemLocation}>());
+export const engageTractorBeam = createAction('[tractorbeam] Engage/Disengage Tractor Beam', props<{tractorbeam: boolean}>())
+export const engageShields = createAction('[shields] Engage Shields', props<{shield: number}>());
+export const engageLasers = createAction('[lasers] Engage Lasers', props<{laser: number}>());
