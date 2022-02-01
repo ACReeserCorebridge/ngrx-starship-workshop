@@ -19,11 +19,11 @@ export class HiddenState {
      * a bitwise OR on all inputs. That's a BIT too much work for me, though.
      *
      *                     REFERENCE GUIDE
-     * shield engine laser docking tractor cargo course location
-     * 0      1      2     3       4       5     6      7
-     * 0x     0x     0x    0b      0b      0b    0x     0x
+     * shield engine laser docking tractor course location
+     * 0      1      2     3       4       6      7
+     * 0x     0x     0x    0b      0b      0x     0x
      */
-    data: string = "00010000";
+    data: string = "0001000";
 
     constructor(
         stringData?: string
@@ -92,22 +92,22 @@ export class HiddenState {
     }
 
     public get course(): number {
-        return Number(`0x${this.data[6]}`);
+        return Number(`0x${this.data[5]}`);
     }
 
     public set course(value: number) {
         let chars = [...this.data];
-        chars[6] = value.toString(16);
+        chars[5] = value.toString(16);
         this.data = chars.join("");
     }
 
     public get location(): number {
-        return Number(`0x${this.data[7]}`);
+        return Number(`0x${this.data[6]}`);
     }
 
     public set location(value: number) {
         let chars = [...this.data];
-        chars[7] = value.toString(16);
+        chars[6] = value.toString(16);
         this.data = chars.join("");
     }
 
