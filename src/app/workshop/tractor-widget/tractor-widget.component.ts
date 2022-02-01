@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { share, tap } from 'rxjs';
 import { AppState } from '../../app.state';
 import { SnitchService } from '../../snitch.service';
-// import { selectTractorbeam } from '../computer.selectors';
+import { selectTractorbeam } from '../computer.selectors';
 
 @Component({
   selector: 'app-tractor-widget',
@@ -27,7 +27,7 @@ export class TractorWidgetComponent implements OnInit {
 
   public firing$ = this.store.select(
     //TODO: fix this selector!
-    () => false
+    selectTractorbeam
     ).pipe(
     //DO NOT change the tap and share operators below
     tap((tractorbeam: boolean) => {
