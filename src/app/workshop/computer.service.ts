@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AppState } from "../app.state";
-import { IComputerDirective } from "../challenge.service";
-import { echo, loadNavData } from "./computer.actions";
+import { IComputerDirective, SolarSystemLocation } from "../challenge.service";
+import { adjustDockingClamp, adjustEngines, adjustLasers, adjustShields, adjustTractorBeam, echo, loadNavData, plotCourse } from "./computer.actions";
 
 /**
  * computer service to interface between captain's commands and ngrx store
@@ -24,16 +24,110 @@ export class ComputerService{
     /**
      * this is called when the captain commands the computer to do one or more things
      */
-    public InterpretDirectives(directives: IComputerDirective[]){
-        //TODO: decide which actions to dispatch based on the directives passed in!
-        directives.forEach(x => this.store.dispatch(
-            //TODO: you don't have to echo all the directives, do what you want!
-            echo(
-                {
-                    message: this.directiveToMessage(x)
+    public InterpretDirectives(directives: IComputerDirective[]) {
+        directives.forEach(x => 
+            {
+                if (x.directObject == 'course') {
+                    let location: SolarSystemLocation = 'LEO';
+
+                    if (x.adjectivalPhrase == 'to Luna orbit')
+                        location = 'LunaOrbit';
+                    else if (x.adjectivalPhrase == 'to the asteroid belt')
+                        location = 'AsteroidBelt';
+
+                    this.store.dispatch(
+                        plotCourse(
+                            {
+                                location: location
+                            }
+                        )
+                    );
+
+                } else if (x.directObject == 'shields') {
+                    let level: number;
+
+                    if (x.verb == 'disengage')
+                        level = 0;
+                    else if (x.adverb == 'halfway') 
+                        level = 5;
+                    else
+                        level = 10;
+
+                    this.store.dispatch(
+                        adjustShields(
+                            {
+                                level: level
+                            }
+                        )
+                    );
+
+                } else if (x.directObject == 'engines') {
+                    let level: number = 0
+
+                    if (x.verb == 'disengage')
+                        level = 0;
+                    else if (x.adverb == 'halfway') 
+                        level = 5;
+                    else if (x.adverb == 'slowly') 
+                        level = 1;
+                    else
+                        level = 10;
+
+                    this.store.dispatch(
+                        adjustEngines(
+                            {
+                                level: level
+                            }
+                        )
+                    );
+
+                } else if (x.directObject == 'laser') {
+                    let level: number = 0
+
+                    if (x.verb == 'disengage')
+                        level = 0;
+                    else if (x.adverb == 'halfway') 
+                        level = 5;
+                    else
+                        level = 10;
+
+                    this.store.dispatch(
+                        adjustLasers(
+                            {
+                                level: level
+                            }
+                        )
+                    );
+
+                } else if (x.directObject == 'tractorbeam') {
+                    this.store.dispatch(
+                        adjustTractorBeam(
+                            {
+                                engaged: (x.verb == 'engage')
+                            }
+                        )
+                    );
+
+                } else if (x.directObject == 'docking clamp') {
+                    this.store.dispatch(
+                        adjustDockingClamp(
+                            {
+                                docking: (x.verb == 'engage')
+                            }
+                        )
+                    );
+
+                } else {
+                    this.store.dispatch(
+                        echo(
+                            {
+                                message: this.directiveToMessage(x)
+                            }
+                        )
+                    );
                 }
-            )
-        ));
+            }
+        );
     }
 
     /**
