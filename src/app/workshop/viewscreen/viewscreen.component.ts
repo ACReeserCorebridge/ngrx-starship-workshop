@@ -21,8 +21,11 @@ export interface ViewscreenState {
   leftImage: string|undefined,
   centerImage: string|undefined,
   rightImage: string|undefined,
-  laser: boolean,
+  laser: number,
   tractor: boolean,
+  laserView: boolean,
+  satelliteView: boolean,
+  docking: boolean
 }
 
 @Component({
@@ -41,9 +44,10 @@ export class ViewscreenComponent {
         location: env.location,
         course: env.course,
         tractorView: env.tractor,
-        laserView: env.laser,
+        laserView: env.laserView,
         satelliteView: env.leftImage === '/assets/satellite.png',
-        asteroidView: env.centerImage === '/assets/asteroid.gif'
+        asteroidView: env.centerImage === '/assets/asteroid.gif',
+        docking: env.docking
       });
     }),
     share()
