@@ -60,7 +60,7 @@ export interface IVoiceEvent{
     mood?: 'angry'
 }
 
-const TickRateMS = 3000;
+const TickRateMS = 500;
 
 @Injectable({
     providedIn: 'root'
