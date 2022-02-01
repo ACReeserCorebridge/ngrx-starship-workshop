@@ -14,19 +14,19 @@ import { ViewscreenState } from "./viewscreen/viewscreen.component";
 // https://ngrx.io/guide/store/selectors
 
 export const selectViewscreen = createSelector(
-    selectComputer,
-    (state: ComputerState) => {
-            const view: ViewscreenState = {
-        location: state.navigationData[0].location,
-        course: state.navigationData[0].location,
-        leftImage: state.navigationData[0].leftImage,
-        centerImage: state.navigationData[0].centerImage,
-        rightImage: state.navigationData[0].rightImage,
-        laser: state.laserIntesity >= 5,
-        tractor: state.tractorBeamEnabled,
-      };
-      return view;
-    }
+  selectComputer,
+  (state: ComputerState) => {
+    const view: ViewscreenState = {
+      location: state.navigationData[0].location,
+      course: state.navigationData[0].location,
+      leftImage: state.navigationData[0].leftImage,
+      centerImage: state.navigationData[0].centerImage,
+      rightImage: state.navigationData[0].rightImage,
+      laser: state.laserIntesity >= 5,
+      tractor: state.tractorBeamEnabled,
+    };
+    return view;
+  }
 );
 
 export const selectEngine = createSelector(

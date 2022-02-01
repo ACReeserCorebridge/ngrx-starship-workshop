@@ -11,9 +11,9 @@ import { NavigationData } from "../nav-db.service";
  * this service is fully customizable, but all logic should be in the actions/reducers
  */
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
-export class ComputerService{
+export class ComputerService {
 
   private localNavData: NavigationData[] = [];
 
@@ -25,18 +25,18 @@ export class ComputerService{
   }
 
 
-  constructor(private store: Store<AppState>){}
+  constructor(private store: Store<AppState>) { }
 
   /**
    * this is called on the captain's very first voice event
    */
-  public Initialize(){
-      this.store.dispatch(loadNavData());
+  public Initialize() {
+    this.store.dispatch(loadNavData());
   }
   /**
    * this is called when the captain commands the computer to do one or more things
    */
-  public InterpretDirectives(directives: IComputerDirective[]){
+  public InterpretDirectives(directives: IComputerDirective[]) {
     directives.forEach(x => {
       this.store.dispatch(
         echo(
@@ -60,7 +60,7 @@ export class ComputerService{
 
   private dispatchChanges(x: IComputerDirective, state: boolean) {
     let navData: NavigationData[] = [];
-    switch(x.directObject) {
+    switch (x.directObject) {
       case 'shields':
         navData = JSON.parse(JSON.stringify(this.localNavData));
         navData[0].centerImage = undefined;
@@ -80,7 +80,7 @@ export class ComputerService{
           navData = JSON.parse(JSON.stringify(this.localNavData));
           navData[0].centerImage = undefined;
         }
-        this.store.dispatch(activateLaser({ intensity: this.intensityDict[x.adverb ? x.adverb : 'stop'], navs:navData }));
+        this.store.dispatch(activateLaser({ intensity: this.intensityDict[x.adverb ? x.adverb : 'stop'], navs: navData }));
         break;
 
       case 'docking clamp':
@@ -92,7 +92,7 @@ export class ComputerService{
           navData = JSON.parse(JSON.stringify(this.localNavData));
           navData[0].leftImage = undefined;
         }
-        this.store.dispatch(toggleTractorBeam({ status: state, navs:navData }));
+        this.store.dispatch(toggleTractorBeam({ status: state, navs: navData }));
         break;
 
       case 'course':
@@ -102,20 +102,20 @@ export class ComputerService{
   }
 
 
-  private getStateByVerbAndObject(verb:string, directObject: string): boolean {
+  private getStateByVerbAndObject(verb: string, directObject: string): boolean {
     switch (verb) {
       case 'engage':
       case 'plot':
         return true;
 
       case 'disengage':
-       return directObject == 'docking clamp' || directObject == 'tractorbeam' ? false : true;
+        return directObject == 'docking clamp' || directObject == 'tractorbeam' ? false : true;
     }
     return false;
   }
   private initNavigationalData(phrase: string) {
     let navData: NavigationData[] = [];
-    switch(phrase) {
+    switch (phrase) {
       case 'to Luna orbit':
         navData = [{
           location: 'LunaOrbit',
@@ -152,15 +152,15 @@ export class ComputerService{
    * @param d
    * @returns
    */
-  private directiveToMessage(d: IComputerDirective): string{
-      let result = "ACK > ";
-      if (d.adverb)
-          result += d.adverb.toUpperCase() + " ";
-      result += d.verb.toUpperCase();
-      result += ' THE ';
-      result += d.directObject.toUpperCase();
-      if (d.adjectivalPhrase)
-          result += " " + d.adjectivalPhrase.toUpperCase();
-      return result;
+  private directiveToMessage(d: IComputerDirective): string {
+    let result = "ACK > ";
+    if (d.adverb)
+      result += d.adverb.toUpperCase() + " ";
+    result += d.verb.toUpperCase();
+    result += ' THE ';
+    result += d.directObject.toUpperCase();
+    if (d.adjectivalPhrase)
+      result += " " + d.adjectivalPhrase.toUpperCase();
+    return result;
   }
 }

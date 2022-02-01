@@ -16,14 +16,14 @@ import { echo, toggleTractorBeam, activateShield, loadNavDataSuccess, toggleDock
  * All of the visual components will select their state from this central
  * state location.
  */
-export interface ComputerState{
-    /**
-     * these messages are displayed by the computer-messages component
-     *
-     * they are not required or useful, they are just example of state properties
-     *
-     * feel free to change or remove this
-     */
+export interface ComputerState {
+  /**
+   * these messages are displayed by the computer-messages component
+   *
+   * they are not required or useful, they are just example of state properties
+   *
+   * feel free to change or remove this
+   */
   echoMessages: string[]
   tractorBeamEnabled: boolean,
   armour: number
@@ -61,7 +61,7 @@ export const computerReducer = createReducer<ComputerState>(
   }),
 
   on(toggleTractorBeam, (state, action) => {
-    var returnValue = {...state, tractorBeamEnabled: action.status};
+    var returnValue = { ...state, tractorBeamEnabled: action.status };
     if (action.navs) {
       if (action.navs && action.navs.length > 0) {
         returnValue.navigationData = action.navs;
@@ -71,7 +71,7 @@ export const computerReducer = createReducer<ComputerState>(
   }),
 
   on(activateShield, (state, action) => {
-    var returnValue = { ...state, laserIntesity: 0, armour: action.armour};
+    var returnValue = { ...state, laserIntesity: 0, armour: action.armour };
     if (action.navs && action.navs.length > 0) {
       returnValue.navigationData = action.navs;
     }
@@ -80,7 +80,7 @@ export const computerReducer = createReducer<ComputerState>(
 
   on(loadNavDataSuccess, (state, action) => {
 
-    var returnValue = {...state, navigationData: action.navs };
+    var returnValue = { ...state, navigationData: action.navs };
     if (action.armour) {
       returnValue.armour = action.armour;
     }
@@ -95,7 +95,7 @@ export const computerReducer = createReducer<ComputerState>(
   }),
 
   on(activateLaser, (state, action) => {
-    var returnValue = {...state, laserIntesity: action.intensity}
+    var returnValue = { ...state, laserIntesity: action.intensity }
     if (action.navs && action.navs.length > 0) {
       returnValue.navigationData = action.navs;
     }
@@ -103,17 +103,17 @@ export const computerReducer = createReducer<ComputerState>(
   }),
 
   on(activateEngine, (state, action) => {
-    var returnValue = {...state,  speed: action.speed };
+    var returnValue = { ...state, speed: action.speed };
     if (action.navs && action.navs.length > 0) {
       returnValue.navigationData = action.navs;
     }
     return returnValue;
   }),
 
-    //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
-    //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
-    //TODO: add a lot more reducer action logic!
-    // https://ngrx.io/guide/store/reducers
-    // there should be a lot of logic in here!
+  //TODO: add an on() listener for loadNavDataSuccess that puts NavigationData[] in the state!
+  //TODO: use the NavigationData[] to set viewscreen state depending on location and/or course!
+  //TODO: add a lot more reducer action logic!
+  // https://ngrx.io/guide/store/reducers
+  // there should be a lot of logic in here!
 );
 
