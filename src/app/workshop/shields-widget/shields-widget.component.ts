@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { map, share, tap } from 'rxjs';
 import { AppState } from '../../app.state';
 import { SnitchService } from '../../snitch.service';
+import { selectShields } from '../computer.selectors';
 // import { selectShields } from '../computer.selectors';
 
 @Component({
@@ -22,8 +23,7 @@ export class ShieldsWidgetComponent implements OnInit {
   }
 
   percent$ = this.store.select(
-    //TODO: fix this selector!
-    () => 0
+    selectShields
   ).pipe(
     //DO NOT change the tap and share operators below
     tap((shieldPowerAmount: number) => this.snitch.OnVisualChange({shield: shieldPowerAmount})),
